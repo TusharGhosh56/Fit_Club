@@ -1,0 +1,243 @@
+.home {
+  min-height: 100vh;
+  background: #121212;
+}
+
+/* Hero Section */
+.home .hero {
+  text-align: center;
+  padding: 8rem 2rem;
+  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('../assets/bicep1.png');
+  background-size: cover;
+  background-position: center;
+  min-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.hero h1 {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  margin-bottom: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.hero p {
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  margin-bottom: 2rem;
+  max-width: 600px;
+  line-height: 1.6;
+}
+
+/* Features Section */
+.features {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+  padding: 6rem 2rem;
+  background: #1a1a1a;
+}
+
+.feature {
+  flex: 1;
+  min-width: 300px;
+  max-width: 400px;
+  text-align: center;
+  padding: 3rem 2rem;
+  background: #242424;
+  border-radius: 12px;
+  transition: transform 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.feature:hover {
+  transform: translateY(-10px);
+}
+
+.feature h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Membership Plans Section */
+.membership-plans {
+  padding: 6rem 2rem;
+  background: #121212;
+}
+
+.plans-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 0;
+}
+
+.plan {
+  flex: 1;
+  min-width: 300px;
+  max-width: 400px;
+  background: #242424;
+  padding: 3rem 2rem;
+  border-radius: 12px;
+  text-align: center;
+  transition: transform 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.plan.featured {
+  border: 2px solid #FF5722;
+  transform: scale(1.05);
+}
+
+.plan.featured::before {
+  content: 'Popular';
+  position: absolute;
+  top: 1.5rem;
+  right: -2rem;
+  background: #FF5722;
+  padding: 0.5rem 3rem;
+  transform: rotate(45deg);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+}
+
+.plan h3 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+}
+
+.plan .price {
+  font-size: 2.5rem;
+  color: #FF5722;
+  margin-bottom: 2rem;
+}
+
+.plan ul {
+  list-style: none;
+  margin-bottom: 2rem;
+}
+
+.plan ul li {
+  padding: 0.8rem 0;
+  border-bottom: 1px solid #333;
+}
+
+.plan ul li:last-child {
+  border-bottom: none;
+}
+
+/* Classes Section */
+.classes {
+  padding: 6rem 2rem;
+  background: #1a1a1a;
+}
+
+.classes-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.class-card {
+  flex: 1;
+  min-width: 300px;
+  max-width: 380px;
+  background: #242424;
+  padding: 2rem;
+  border-radius: 12px;
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.class-card:hover {
+  transform: translateY(-5px);
+}
+
+.class-card h3 {
+  font-size: 1.5rem;
+  color: #FF5722;
+  margin-bottom: 1rem;
+}
+
+.class-card p {
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+.class-card .time {
+  color: #888;
+  font-size: 0.9rem;
+  display: block;
+  margin-top: auto;
+}
+
+/* Common Styles */
+.section-title {
+  font-size: clamp(2rem, 4vw, 2.5rem);
+  margin-bottom: 3rem;
+  text-align: center;
+  position: relative;
+  padding-bottom: 1rem;
+}
+
+.section-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: #FF5722;
+}
+
+.cta-button {
+  background: #FF5722;
+  color: white;
+  border: none;
+  padding: 1rem 2.5rem;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+
+.cta-button:hover {
+  background: #f4511e;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 87, 34, 0.3);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .hero {
+    padding: 6rem 1rem;
+  }
+
+  .feature, .plan, .class-card {
+    min-width: 100%;
+  }
+
+  .plan.featured {
+    transform: scale(1);
+  }
+
+  .section-title {
+    margin-bottom: 2rem;
+  }
+}
