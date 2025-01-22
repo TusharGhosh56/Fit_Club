@@ -1,13 +1,13 @@
 .equipment {
   padding: 3rem 4rem;
-  background-color: #f8f9fa;
+  background-color: #000000;
 }
 
 .section-title {
   text-align: center;
   font-size: 2.5rem;
   margin-bottom: 3rem;
-  color: #333;
+  color: #fdfdfd;
   text-transform: uppercase;
 }
 
