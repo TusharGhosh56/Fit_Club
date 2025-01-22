@@ -7,7 +7,7 @@ function Navbar() {
       <div className="nav-brand">FitClub-Fitness with Community</div>
       <ul className="nav-links">
         <li><Link to="/">Home</Link></li>
-        <li><Link to="/equipment">Equipment</Link></li>
+        <li><Link to="/programs">Programs</Link></li>
         <li><Link to="/about">About</Link></li>
         <li><Link to="/blog">Blog</Link></li>
       </ul>
