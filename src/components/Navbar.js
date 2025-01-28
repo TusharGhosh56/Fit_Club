@@ -10,6 +10,10 @@ function Navbar() {
         <li><Link to="/programs">Programs</Link></li>
         <li><Link to="/about">About</Link></li>
         <li><Link to="/blog">Blog</Link></li>
+        <li className="auth-links">
+          <Link to="/login" className="login-btn">Login</Link>
+          <Link to="/signup" className="signup-btn">Sign Up</Link>
+        </li>
       </ul>
     </nav>
   );

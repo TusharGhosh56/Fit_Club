@@ -21,6 +21,7 @@
   margin: 0;
   padding: 0;
   gap: 2rem;
+  align-items: center;
 }
 
 .nav-links li a {
@@ -40,6 +41,33 @@
   transform: translateY(-2px);
 }
 
+/* Updated auth link styles */
+.auth-links {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.auth-links .login-btn,
+.auth-links .signup-btn {
+  font-size: 1.1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+}
+
+.auth-links .login-btn {
+  border: 2px solid #ff4d4d;
+}
+
+.auth-links .signup-btn {
+  background-color: #ff4d4d;
+}
+
+.auth-links .login-btn:hover,
+.auth-links .signup-btn:hover {
+  transform: translateY(-2px);
+}
+
 @media (max-width: 768px) {
   .navbar {
     padding: 1rem 2rem;
@@ -49,5 +77,11 @@
 
   .nav-links {
     gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .auth-links {
+    margin-top: 0.5rem;
   }
 }

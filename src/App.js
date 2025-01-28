@@ -5,6 +5,8 @@ import Home from './pages/Home';
 import Programs from './pages/Programs';
 import About from './pages/About';
 import Blog from './pages/Blog';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
 import './App.css';
 
 function App() {
@@ -18,6 +20,8 @@ function App() {
             <Route path="/programs" element={<Programs />} />
             <Route path="/about" element={<About />} />
             <Route path="/blog" element={<Blog />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
           </Routes>
         </main>
         <Footer />
