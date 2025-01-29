@@ -11,8 +11,8 @@ function Navbar() {
         <li><Link to="/about">About</Link></li>
         <li><Link to="/blog">Blog</Link></li>
         <li className="auth-links">
-          <Link to="/login" className="login-btn">Login</Link>
-          <Link to="/signup" className="signup-btn">Sign Up</Link>
+          <Link to="/login" className="login-btn">Login/Signup</Link>
+          
         </li>
       </ul>
     </nav>
