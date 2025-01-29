@@ -68,6 +68,57 @@
   transform: translateY(-2px);
 }
 
+/* Add these styles to your existing Navbar.css */
+
+.profile-link {
+  display: flex;
+  align-items: center;
+}
+
+.nav-profile-photo {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #FF5722;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.nav-profile-photo:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 15px rgba(255, 87, 34, 0.3);
+}
+
+.nav-profile-placeholder {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #FF5722;
+  color: #FF5722;
+  font-size: 1.2rem;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.nav-profile-placeholder:hover {
+  transform: scale(1.1);
+  background: #444;
+  box-shadow: 0 0 15px rgba(255, 87, 34, 0.3);
+}
+
+/* Update existing styles if needed */
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+/* Responsive adjustments */
 @media (max-width: 768px) {
   .navbar {
     padding: 1rem 2rem;
@@ -83,5 +134,11 @@
 
   .auth-links {
     margin-top: 0.5rem;
+  }
+
+  .nav-profile-photo,
+  .nav-profile-placeholder {
+    width: 35px;
+    height: 35px;
   }
 }
