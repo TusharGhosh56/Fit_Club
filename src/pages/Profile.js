@@ -1,9 +1,9 @@
 import React from "react";
 import '../css/Profile.css'; 
-import image1 from '../assets/images/image1.jpg'; // Reusing image from About page
+import image1 from '../assets/images/image1.jpg'; 
 
 const Profile = () => {
-  // Simulated logged-in user data (replace with actual data from backend)
+ 
   const user = {
     name: "John Doe",
     role: "Certified Fitness Trainer",
@@ -11,7 +11,7 @@ const Profile = () => {
     phone: "+1 (123) 456-7890",
     experience: "5 years in strength training and nutrition coaching",
     bio: "Passionate fitness coach dedicated to helping clients achieve their health and fitness goals through personalized training and nutritional guidance. Specialized in strength training, HIIT workouts, and nutrition planning. Committed to creating sustainable fitness journeys for clients of all levels.",
-    photo: image1, // Reusing photo from About page
+    photo: image1, 
     stats: {
       clientsTrained: "200+",
       successRate: "95%",

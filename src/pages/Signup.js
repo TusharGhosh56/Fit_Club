@@ -15,6 +15,7 @@ function Signup() {
   });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -45,7 +46,10 @@ function Signup() {
     const result = await signup(formData.email, formData.password, formData.name);
     
     if (result.success) {
-      navigate('/profile');
+      setSuccessMessage('Account created successfully! Redirecting to login...');
+      setTimeout(() => {
+        navigate('/login');
+      }, 2000); 
     } else {
       setErrors(prev => ({
         ...prev,
@@ -60,6 +64,11 @@ function Signup() {
     <div className="auth-container">
       <div className="auth-card">
         <h2>Join <span className="highlight">FitClub</span> Today</h2>
+        {successMessage && (
+          <div className="success-message">
+            {successMessage}
+          </div>
+        )}
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="name">Full Name</label>
