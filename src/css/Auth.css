@@ -96,7 +96,7 @@
   color: #ff4d4d;
 }
 
-/* Update Navbar.css to style the new auth buttons */
+
 .auth-links {
   display: flex;
   gap: 1rem;
@@ -114,4 +114,26 @@
   .auth-card {
     padding: 1.5rem;
   }
+}
+
+
+.error {
+  border-color: #ff4d4d !important;
+}
+
+.error-message {
+  color: #ff4d4d;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  display: block;
+}
+
+.submit-error {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.auth-button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
 } 
