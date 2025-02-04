@@ -1,49 +1,93 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import '../css/Profile.css'; 
-import image1 from '../assets/images/image1.jpg'; 
+import { auth, db } from '../firebase/config';
+import { doc, getDoc } from 'firebase/firestore';
+import defaultProfileImage from '../assets/images/image1.jpg'; 
+import { logout } from '../services/authService';
+import { useNavigate } from 'react-router-dom';
 
 const Profile = () => {
- 
-  const user = {
-    name: "John Doe",
-    role: "Certified Fitness Trainer",
-    email: "john.doe@example.com",
-    phone: "+1 (123) 456-7890",
-    experience: "5 years in strength training and nutrition coaching",
-    bio: "Passionate fitness coach dedicated to helping clients achieve their health and fitness goals through personalized training and nutritional guidance. Specialized in strength training, HIIT workouts, and nutrition planning. Committed to creating sustainable fitness journeys for clients of all levels.",
-    photo: image1, 
-    stats: {
-      clientsTrained: "200+",
-      successRate: "95%",
-      certifications: "4"
+  const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const userDoc = await getDoc(doc(db, 'users', auth.currentUser.uid));
+        if (userDoc.exists()) {
+          setUserData({
+            ...userDoc.data(),
+            stats: {
+              clientsTrained: userDoc.data().clientsTrained || "0",
+              successRate: userDoc.data().successRate || "0%",
+              certifications: userDoc.data().certifications || "0"
+            }
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (auth.currentUser) {
+      fetchUserData();
+    }
+  }, []);
+
+  const handleLogout = async () => {
+    const result = await logout();
+    if (result.success) {
+      navigate('/login');
+    } else {
+      console.error("Logout failed:", result.error);
     }
   };
 
+  if (loading) {
+    return (
+      <div className="profile-container">
+        <div className="loading">Loading profile...</div>
+      </div>
+    );
+  }
+
   return (
     <div className="profile-container">
-      <h2>Trainer Profile</h2>
+      <div className="profile-header-actions">
+        <h2>Trainer Profile</h2>
+        <button onClick={handleLogout} className="logout-button">
+          Logout
+        </button>
+      </div>
       <div className="profile-content">
         <div className="profile-top">
           <div className="profile-photo-container">
-            <img src={user.photo} alt="Profile" className="profile-photo" />
+            <img 
+              src={userData?.photoURL || defaultProfileImage} 
+              alt="Profile" 
+              className="profile-photo" 
+            />
           </div>
           <div className="profile-header">
-            <h3>{user.name}</h3>
-            <p className="profile-role">{user.role}</p>
+            <h3>{userData?.fullName || 'Name Not Set'}</h3>
+            <p className="profile-role">{userData?.role || 'Member'}</p>
           </div>
         </div>
 
         <div className="stats-container">
           <div className="stat-box">
-            <div className="stat-number">{user.stats.clientsTrained}</div>
+            <div className="stat-number">{userData?.stats.clientsTrained}</div>
             <div className="stat-label">Clients Trained</div>
           </div>
           <div className="stat-box">
-            <div className="stat-number">{user.stats.successRate}</div>
+            <div className="stat-number">{userData?.stats.successRate}</div>
             <div className="stat-label">Success Rate</div>
           </div>
           <div className="stat-box">
-            <div className="stat-number">{user.stats.certifications}</div>
+            <div className="stat-number">{userData?.stats.certifications}</div>
             <div className="stat-label">Certifications</div>
           </div>
         </div>
@@ -51,16 +95,18 @@ const Profile = () => {
         <div className="profile-details">
           <div className="profile-info-grid">
             <div className="profile-info">
-              <strong>Email:</strong> {user.email}
+              <strong>Email:</strong> {userData?.email || 'Not provided'}
             </div>
             <div className="profile-info">
-              <strong>Phone:</strong> {user.phone}
+              <strong>Phone:</strong> {userData?.phone || 'Not provided'}
             </div>
             <div className="profile-info">
-              <strong>Experience:</strong> {user.experience}
+              <strong>Experience:</strong> {userData?.experience || 'Not provided'}
             </div>
           </div>
-          <div className="profile-bio">{user.bio}</div>
+          <div className="profile-bio">
+            {userData?.bio || 'No bio available'}
+          </div>
         </div>
       </div>
     </div>
@@ -68,3 +114,4 @@ const Profile = () => {
 };
 
 export default Profile;
+

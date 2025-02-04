@@ -247,5 +247,54 @@
         padding: 1.2rem;
     }
 }
+
+/* Add these to your existing Profile.css */
+.profile-header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4rem;
+  padding: 0 1rem;
+  max-width: 1200px;
+  margin: 0 auto 4rem;
+}
+
+.logout-button {
+  background: #FF5722;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 15px rgba(255, 87, 34, 0.2);
+}
+
+.logout-button:hover {
+  background: #f4511e;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 87, 34, 0.3);
+}
+
+.logout-button:active {
+  transform: translateY(0);
+}
+
+@media (max-width: 600px) {
+  .profile-header-actions {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .logout-button {
+    width: 100%;
+    max-width: 200px;
+  }
+}
   
   
