@@ -15,7 +15,6 @@ export const signup = async (email, password, fullName) => {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
 
-   
     await updateProfile(user, {
       displayName: fullName
     });
@@ -25,6 +24,14 @@ export const signup = async (email, password, fullName) => {
       fullName,
       email,
       createdAt: new Date().toISOString(),
+      role: 'Member',
+      phone: '',
+      experience: '',
+      bio: '',
+      photoURL: '',
+      clientsTrained: '0',
+      successRate: '0%',
+      certifications: '0',
       programs: [],
       workoutHistory: []
     });
