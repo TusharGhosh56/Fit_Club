@@ -3,7 +3,7 @@ import '../css/Home.css';
 function Home() {
   return (
     <div className="home">
-      <div className="hero">
+      <div className="hero" >      
         <h1>Transform Your <span className="highlight">Life</span></h1>
         <p>Join the ultimate fitness experience where strength meets community. Start your journey today.</p>
         <button className="cta-button">Start Free Trial</button>

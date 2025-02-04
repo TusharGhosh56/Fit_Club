@@ -1,0 +1,167 @@
+.auth-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: linear-gradient(135deg, #1a1a1a 0%, #333 100%);
+}
+
+.auth-card {
+  background: white;
+  padding: 2.5rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+}
+
+.auth-card h2 {
+  text-align: center;
+  margin-bottom: 1rem;
+  color: #ff4d4d;
+  font-size: 1.8rem;
+}
+
+.highlight {
+  color: #ff4d4d;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #333;
+  font-weight: 500;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.8rem;
+  border: 2px solid #eee;
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.form-group input:focus {
+  border-color: #ff4d4d;
+  outline: none;
+}
+
+.auth-button {
+  width: 100%;
+  padding: 1rem;
+  background: #ff4d4d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.auth-button:hover {
+  background: #ff3333;
+}
+
+.auth-footer {
+  margin-top: 1.5rem;
+  text-align: center;
+  color: #666;
+}
+
+.auth-footer a {
+  color: #ff4d4d;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.auth-footer a:hover {
+  text-decoration: underline;
+}
+
+.forgot-password {
+  display: block;
+  margin-top: 1rem;
+  color: #666;
+  text-decoration: none;
+}
+
+.forgot-password:hover {
+  color: #ff4d4d;
+}
+
+
+.auth-links {
+  display: flex;
+  gap: 1rem;
+}
+
+.login-btn {
+  border: 1px solid #ff4d4d !important;
+}
+
+.signup-btn {
+  background: #ff4d4d !important;
+}
+
+@media (max-width: 480px) {
+  .auth-card {
+    padding: 1.5rem;
+  }
+}
+
+
+.error {
+  border-color: #ff4d4d !important;
+}
+
+.error-message {
+  color: #ff4d4d;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  display: block;
+}
+
+.submit-error {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.auth-button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.success-message {
+  background-color: #4CAF50;
+  color: white;
+  padding: 1rem;
+  border-radius: 4px;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.auth-message {
+  text-align: center;
+  color: #666;
+  margin: 1.5rem 0;
+  font-size: 1.1rem;
+} 
