@@ -18,8 +18,8 @@
 
 .auth-card h2 {
   text-align: center;
-  margin-bottom: 2rem;
-  color: #333;
+  margin-bottom: 1rem;
+  color: #ff4d4d;
   font-size: 1.8rem;
 }
 
@@ -157,4 +157,11 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+.auth-message {
+  text-align: center;
+  color: #666;
+  margin: 1.5rem 0;
+  font-size: 1.1rem;
 } 
