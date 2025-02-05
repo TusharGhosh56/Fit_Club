@@ -10,7 +10,7 @@ function Blog() {
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
-  // Fetch posts from Firebase
+
   useEffect(() => {
     const fetchPosts = async () => {
       try {
@@ -54,10 +54,9 @@ function Blog() {
           comments: []
         };
 
-        // Add post to Firestore
         const docRef = await addDoc(collection(db, 'posts'), postData);
 
-        // Update local state
+
         setPosts(prevPosts => [{
           id: docRef.id,
           ...postData,
