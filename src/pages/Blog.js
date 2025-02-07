@@ -93,8 +93,9 @@ function Blog() {
           disabled={!auth.currentUser}
         />
         <button 
-          type="submit" 
-          disabled={!auth.currentUser || isLoading}
+          onClick={() => !auth.currentUser && navigate('/login')}
+
+          disabled={isLoading}
         >
           {!auth.currentUser ? "Login to Post" : isLoading ? "Posting..." : "Post"}
         </button>
