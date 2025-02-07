@@ -1,5 +1,6 @@
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
-import { auth } from '../firebase/config';
+import { doc, setDoc } from 'firebase/firestore';
+import { auth, db } from '../firebase/config';
 
 export const signupUser = async (email, password, name) => {
   try {
@@ -7,6 +8,20 @@ export const signupUser = async (email, password, name) => {
     
     await updateProfile(userCredential.user, {
       displayName: name
+    });
+
+    await setDoc(doc(db, 'users', userCredential.user.uid), {
+      fullName: name,
+      email: email,
+      role: 'Member',
+      stats: {
+        clientsTrained: "0",
+        successRate: "0%",
+        certifications: "0"
+      },
+      bio: '',
+      phone: '',
+      experience: ''
     });
 
     return {

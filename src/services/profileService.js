@@ -1,5 +1,5 @@
 import { auth, db } from '../firebase/config';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 
 export const fetchUserProfile = async (userId) => {
   try {
@@ -11,9 +11,9 @@ export const fetchUserProfile = async (userId) => {
         data: {
           ...userDoc.data(),
           stats: {
-            clientsTrained: userDoc.data().clientsTrained || "0",
-            successRate: userDoc.data().successRate || "0%",
-            certifications: userDoc.data().certifications || "0"
+            clientsTrained: userDoc.data().stats.clientsTrained || "0",
+            successRate: userDoc.data().stats.successRate || "0%",
+            certifications: userDoc.data().stats.certifications || "0"
           }
         }
       };
@@ -23,6 +23,23 @@ export const fetchUserProfile = async (userId) => {
         error: 'User profile not found'
       };
     }
+  } catch (error) {
+    return {
+      success: false,
+      error: error.message
+    };
+  }
+};
+
+export const updateUserProfile = async (userId, updatedData) => {
+  try {
+    const userRef = doc(db, 'users', userId);
+    await updateDoc(userRef, updatedData);
+    
+    return {
+      success: true,
+      data: updatedData
+    };
   } catch (error) {
     return {
       success: false,
