@@ -1,94 +1,63 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { login } from '../services/authService';
-import { validateEmail } from '../utils/validation';
+import { useNavigate, Link } from 'react-router-dom';
+import { loginUser } from '../services/loginService';
 import '../css/Auth.css';
-import { Link } from 'react-router-dom';
 
 function Login() {
-  const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-  });
-  const [errors, setErrors] = useState({});
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-
-  const handleChange = (e) => {
-    const { id, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [id]: value
-    }));
-   
-    if (errors[id]) {
-      setErrors(prev => ({
-        ...prev,
-        [id]: ''
-      }));
-    }
-  };
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
     setIsLoading(true);
-    
 
-    if (!validateEmail(formData.email)) {
-      setErrors(prev => ({
-        ...prev,
-        email: 'Please enter a valid email address'
-      }));
+    try {
+      const result = await loginUser(email, password);
+      
+      if (result.success) {
+        navigate('/');
+      } else {
+        setError(result.error);
+      }
+    } catch (error) {
+      setError('An unexpected error occurred. Please try again.');
+    } finally {
       setIsLoading(false);
-      return;
     }
-
-    const result = await login(formData.email, formData.password);
-    
-    if (result.success) {
-      navigate('/profile');
-    } else {
-      setErrors(prev => ({
-        ...prev,
-        submit: result.error
-      }));
-    }
-    
-    setIsLoading(false);
   };
 
   return (
     <div className="auth-container">
       <div className="auth-card">
-        <h2>Welcome Back to <span className="highlight">FitClub</span></h2>
+        <h2>Welcome to <span className="highlight">FitClub</span></h2>
+        {error && <div className="error-message">{error}</div>}
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="email">Email</label>
-            <input 
-              type="email" 
-              id="email" 
-              value={formData.email}
-              onChange={handleChange}
-              required 
+            <input
+              type="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
               placeholder="Enter your email"
-              className={errors.email ? 'error' : ''}
             />
-            {errors.email && <span className="error-message">{errors.email}</span>}
           </div>
           <div className="form-group">
             <label htmlFor="password">Password</label>
-            <input 
-              type="password" 
-              id="password" 
-              value={formData.password}
-              onChange={handleChange}
-              required 
+            <input
+              type="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
               placeholder="Enter your password"
-              className={errors.password ? 'error' : ''}
             />
-            {errors.password && <span className="error-message">{errors.password}</span>}
           </div>
-          {errors.submit && <div className="error-message submit-error">{errors.submit}</div>}
           <button 
             type="submit" 
             className="auth-button"
@@ -98,8 +67,7 @@ function Login() {
           </button>
         </form>
         <div className="auth-footer">
-          <p>Don't have an account? <Link to="/signup">Sign Up</Link></p>
-          <Link to="/forgot-password" className="forgot-password">Forgot Password?</Link>
+          <p>Don't have an account? <Link to="/signup">Sign up</Link></p>
         </div>
       </div>
     </div>

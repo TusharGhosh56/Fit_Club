@@ -2,13 +2,17 @@ import '../css/About.css';
 import image1 from '../assets/images/image1.jpg';
 import image2 from '../assets/images/image2.jpg';
 import image3 from '../assets/images/image3.jpg';
+import { useNavigate } from 'react-router-dom';
+
 
 function About() {
+  const navigate = useNavigate();
+
   return (
     <div className="about">
       <h2>About FitClub Fitness</h2>
       <div className="about-content">
-        {/* Mission Section */}
+       
         <section className="mission">
           <h3>Our Mission</h3>
           <p>
@@ -17,7 +21,7 @@ function About() {
           </p>
         </section>
 
-        {/* Facilities and Services Section */}
+    
         <section className="facilities">
           <h3>Our Facilities & Services</h3>
           <ul>
@@ -29,29 +33,29 @@ function About() {
           </ul>
         </section>
 
-        {/* Team Section */}
+
         <section className="team-section">
           <h3>Meet Our Team</h3>
           <div className="team-grid">
             <div className="team-member">
-              <img src={image1} alt="John Doe" />
-              <h4>John Doe</h4>
+              <img src={image1} alt="imageNotFound" />
+              <h4>Tushar</h4>
               <p>Head Trainer</p>
             </div>
             <div className="team-member">
-              <img src={image3} alt="Jane Smith" />
-              <h4>Jane Smith</h4>
+              <img src={image3} alt="imageNotFound" />
+              <h4>Snehil</h4>
               <p>Nutrition Specialist</p>
             </div>
             <div className="team-member">
-              <img src={image2} alt="Emily Johnson" />
-              <h4>Emily Johnson</h4>
+              <img src={image2} alt="imageNotFound" />
+              <h4>Kishan</h4>
               <p>Yoga Instructor</p>
             </div>
           </div>
         </section>
 
-        {/* Testimonials Section */}
+
         <section className="testimonials">
           <h3>What Our Members Say</h3>
           <div className="testimonial">
@@ -62,11 +66,10 @@ function About() {
           </div>
         </section>
 
-        {/* Call to Action */}
         <section className="cta">
           <h3>Join the FitClub Community Today</h3>
           <p>Start your fitness journey with us and achieve your goals.</p>
-          <button>Get Started</button>
+          <button onClick={()=>navigate("/login")}>Get Started</button>
         </section>
       </div>
     </div>
