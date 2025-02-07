@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { signup } from '../services/authService';
+import { useNavigate, Link } from 'react-router-dom';
+import { signupUser } from '../services/signupService';
 import { getValidationErrors } from '../utils/validation';
 import '../css/Auth.css';
-import { Link } from 'react-router-dom';
 
 function Signup() {
   const navigate = useNavigate();
@@ -13,7 +12,7 @@ function Signup() {
     password: '',
     confirmPassword: ''
   });
-  const [errors, setErrors] = useState({});
+  const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
 
@@ -23,41 +22,38 @@ function Signup() {
       ...prev,
       [id]: value
     }));
-   
-    if (errors[id]) {
-      setErrors(prev => ({
-        ...prev,
-        [id]: ''
-      }));
-    }
+    setError('');
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+    setError('');
+
 
     const validationErrors = getValidationErrors(formData);
     if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
+      setError(Object.values(validationErrors)[0]);
       setIsLoading(false);
       return;
     }
 
-    const result = await signup(formData.email, formData.password, formData.name);
-    
-    if (result.success) {
-      setSuccessMessage('Account created successfully! Redirecting to login...');
-      setTimeout(() => {
-        navigate('/login');
-      }, 2000); 
-    } else {
-      setErrors(prev => ({
-        ...prev,
-        submit: result.error
-      }));
+    try {
+      const result = await signupUser(formData.email, formData.password, formData.name);
+      
+      if (result.success) {
+        setSuccessMessage('Account created successfully! Redirecting to login...');
+        setTimeout(() => {
+          navigate('/login');
+        }, 2000);
+      } else {
+        setError(result.error);
+      }
+    } catch (err) {
+      setError('An unexpected error occurred. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
-    
-    setIsLoading(false);
   };
 
   return (
@@ -69,6 +65,7 @@ function Signup() {
             {successMessage}
           </div>
         )}
+        {error && <div className="error-message">{error}</div>}
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="name">Full Name</label>
@@ -79,9 +76,7 @@ function Signup() {
               onChange={handleChange}
               required 
               placeholder="Enter your full name"
-              className={errors.name ? 'error' : ''}
             />
-            {errors.name && <span className="error-message">{errors.name}</span>}
           </div>
           <div className="form-group">
             <label htmlFor="email">Email</label>
@@ -92,9 +87,7 @@ function Signup() {
               onChange={handleChange}
               required 
               placeholder="Enter your email"
-              className={errors.email ? 'error' : ''}
             />
-            {errors.email && <span className="error-message">{errors.email}</span>}
           </div>
           <div className="form-group">
             <label htmlFor="password">Password</label>
@@ -105,9 +98,7 @@ function Signup() {
               onChange={handleChange}
               required 
               placeholder="Create a password"
-              className={errors.password ? 'error' : ''}
             />
-            {errors.password && <span className="error-message">{errors.password}</span>}
           </div>
           <div className="form-group">
             <label htmlFor="confirmPassword">Confirm Password</label>
@@ -118,11 +109,8 @@ function Signup() {
               onChange={handleChange}
               required 
               placeholder="Confirm your password"
-              className={errors.confirmPassword ? 'error' : ''}
             />
-            {errors.confirmPassword && <span className="error-message">{errors.confirmPassword}</span>}
           </div>
-          {errors.submit && <div className="error-message submit-error">{errors.submit}</div>}
           <button 
             type="submit" 
             className="auth-button"

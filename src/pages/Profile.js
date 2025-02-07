@@ -1,48 +1,48 @@
 import React, { useState, useEffect } from "react";
 import '../css/Profile.css'; 
-import { auth, db } from '../firebase/config';
-import { doc, getDoc } from 'firebase/firestore';
+import { auth } from '../firebase/config';
 import defaultProfileImage from '../assets/images/image1.jpg'; 
 import { logout } from '../services/authService';
+import { fetchUserProfile } from '../services/profileService';
 import { useNavigate } from 'react-router-dom';
 
 const Profile = () => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchUserData = async () => {
+    const loadUserProfile = async () => {
       try {
-        const userDoc = await getDoc(doc(db, 'users', auth.currentUser.uid));
-        if (userDoc.exists()) {
-          setUserData({
-            ...userDoc.data(),
-            stats: {
-              clientsTrained: userDoc.data().clientsTrained || "0",
-              successRate: userDoc.data().successRate || "0%",
-              certifications: userDoc.data().certifications || "0"
-            }
-          });
+        if (!auth.currentUser) {
+          navigate('/login');
+          return;
+        }
+
+        const result = await fetchUserProfile(auth.currentUser.uid);
+        
+        if (result.success) {
+          setUserData(result.data);
+        } else {
+          setError(result.error);
         }
       } catch (error) {
-        console.error("Error fetching user data:", error);
+        setError('Failed to load profile data');
       } finally {
         setLoading(false);
       }
     };
 
-    if (auth.currentUser) {
-      fetchUserData();
-    }
-  }, []);
+    loadUserProfile();
+  }, [navigate]);
 
   const handleLogout = async () => {
     const result = await logout();
     if (result.success) {
       navigate('/login');
     } else {
-      console.error("Logout failed:", result.error);
+      setError('Logout failed. Please try again.');
     }
   };
 
@@ -62,6 +62,9 @@ const Profile = () => {
           Logout
         </button>
       </div>
+      
+      {error && <div className="error-message">{error}</div>}
+      
       <div className="profile-content">
         <div className="profile-top">
           <div className="profile-photo-container">
