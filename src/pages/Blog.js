@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth } from '../firebase/config';
-import { fetchPosts, createPost } from '../services/blogService';
+import { fetchPosts, createPost, deletePost, updatePost } from '../services/blogService';
 import '../css/Blog.css';
 
 function Blog() {
@@ -9,6 +9,8 @@ function Blog() {
   const [newPost, setNewPost] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
+  const [editingPost, setEditingPost] = useState(null);
+  const [editText, setEditText] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -59,6 +61,60 @@ function Blog() {
     }
   };
 
+  const handleDelete = async (postId) => {
+    if (window.confirm('Are you sure you want to delete this post?')) {
+      setIsLoading(true);
+      setError('');
+
+      try {
+        const result = await deletePost(postId);
+        if (result.success) {
+          setPosts(prevPosts => prevPosts.filter(post => post.id !== postId));
+        } else {
+          setError(result.error);
+        }
+      } catch (error) {
+        setError('Failed to delete post');
+      } finally {
+        setIsLoading(false);
+      }
+    }
+  };
+
+  const handleEdit = (post) => {
+    setEditingPost(post.id);
+    setEditText(post.text);
+  };
+
+  const handleUpdate = async (postId) => {
+    setIsLoading(true);
+    setError('');
+
+    try {
+      const result = await updatePost(postId, editText.trim());
+      if (result.success) {
+        setPosts(prevPosts => prevPosts.map(post => 
+          post.id === postId 
+            ? { ...post, text: editText.trim(), editedAt: new Date().toLocaleString() }
+            : post
+        ));
+        setEditingPost(null);
+        setEditText('');
+      } else {
+        setError(result.error);
+      }
+    } catch (error) {
+      setError('Failed to update post');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const cancelEdit = () => {
+    setEditingPost(null);
+    setEditText('');
+  };
+
   if (isLoading && posts.length === 0) {
     return (
       <div className="blog">
@@ -107,9 +163,38 @@ function Blog() {
                   <small className="author-email">{post.authorEmail}</small>
                 </div>
               </div>
-              <span className="post-date">{post.createdAt}</span>
+              <span className="post-date">
+                {post.editedAt ? `Edited: ${post.editedAt}` : post.createdAt}
+              </span>
             </div>
-            <p className="post-content">{post.text}</p>
+            
+            {editingPost === post.id ? (
+              <div className="edit-post-form">
+                <textarea
+                  value={editText}
+                  onChange={(e) => setEditText(e.target.value)}
+                  className="edit-textarea"
+                />
+                <div className="edit-actions">
+                  <button 
+                    onClick={() => handleUpdate(post.id)}
+                    disabled={isLoading}
+                    className="save-btn"
+                  >
+                    Save
+                  </button>
+                  <button 
+                    onClick={cancelEdit}
+                    className="cancel-btn"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <p className="post-content">{post.text}</p>
+            )}
+
             <div className="post-actions">
               <div className="action-buttons">
                 <button 
@@ -133,6 +218,25 @@ function Blog() {
                   <i className="far fa-share-square"></i>
                 </button>
               </div>
+              
+              {auth.currentUser?.uid === post.authorId && (
+                <div className="post-owner-actions">
+                  <button 
+                    onClick={() => handleEdit(post)}
+                    className="edit-button"
+                    disabled={isLoading}
+                  >
+                    <i className="fas fa-edit"></i>
+                  </button>
+                  <button 
+                    onClick={() => handleDelete(post.id)}
+                    className="delete-button"
+                    disabled={isLoading}
+                  >
+                    <i className="fas fa-trash"></i>
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         ))}
