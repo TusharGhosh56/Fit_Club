@@ -8,7 +8,7 @@ function About() {
     <div className="about">
       <h2>About FitClub Fitness</h2>
       <div className="about-content">
-        {/* Mission Section */}
+       
         <section className="mission">
           <h3>Our Mission</h3>
           <p>
@@ -17,7 +17,7 @@ function About() {
           </p>
         </section>
 
-        {/* Facilities and Services Section */}
+       
         <section className="facilities">
           <h3>Our Facilities & Services</h3>
           <ul>
@@ -29,7 +29,7 @@ function About() {
           </ul>
         </section>
 
-        {/* Team Section */}
+
         <section className="team-section">
           <h3>Meet Our Team</h3>
           <div className="team-grid">
@@ -51,7 +51,7 @@ function About() {
           </div>
         </section>
 
-        {/* Testimonials Section */}
+       
         <section className="testimonials">
           <h3>What Our Members Say</h3>
           <div className="testimonial">
@@ -62,7 +62,7 @@ function About() {
           </div>
         </section>
 
-        {/* Call to Action */}
+  
         <section className="cta">
           <h3>Join the FitClub Community Today</h3>
           <p>Start your fitness journey with us and achieve your goals.</p>
