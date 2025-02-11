@@ -5,7 +5,10 @@ import {
   query, 
   orderBy, 
   getDocs, 
-  serverTimestamp 
+  serverTimestamp, 
+  doc, 
+  deleteDoc, 
+  updateDoc
 } from 'firebase/firestore';
 
 export const fetchPosts = async () => {
@@ -66,4 +69,29 @@ export const createPost = async (text) => {
       error: error.message
     };
   }
-}; 
+};
+
+export const deletePost = async (postId) => {
+  try {
+    const docRef = doc(db, 'posts', postId);
+    await deleteDoc(docRef);
+    return { success: true };
+  } catch (error) {
+    console.error("Error deleting post:", error);
+    return { success: false, error: error.message };
+  }
+};
+
+export const updatePost = async (postId, newText) => {
+  try {
+    const docRef = doc(db, 'posts', postId);
+    await updateDoc(docRef, {
+      text: newText,
+      editedAt: serverTimestamp()
+    });
+    return { success: true };
+  } catch (error) {
+    console.error("Error updating post:", error);
+    return { success: false, error: error.message };
+  }
+};
