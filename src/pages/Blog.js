@@ -8,6 +8,7 @@ import '../css/Blog.css';
 function Blog() {
   const [posts, setPosts] = useState([]);
   const [newPost, setNewPost] = useState('');
+  const [newImage, setNewImage] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   const [editingPost, setEditingPost] = useState(null);
@@ -41,16 +42,16 @@ function Blog() {
       return;
     }
 
-    if (newPost.trim()) {
+    if (newPost.trim() || newImage) {
       setIsLoading(true);
       setError('');
 
       try {
-        const result = await createPost(newPost.trim());
-
+        const result = await createPost(newPost.trim(), newImage);
         if (result.success) {
           setPosts(prevPosts => [result.data, ...prevPosts]);
           setNewPost('');
+          setNewImage(null);
         } else {
           setError(result.error);
         }
@@ -60,6 +61,10 @@ function Blog() {
         setIsLoading(false);
       }
     }
+  };
+
+  const handleImageChange = (e) => {
+    setNewImage(e.target.files[0]);
   };
 
   const handleDelete = async (postId) => {
@@ -132,7 +137,13 @@ function Blog() {
             placeholder={auth.currentUser ? "Share your fitness journey..." : "Please login to post"}
             disabled={!auth.currentUser}
           />
-          <button
+          <input 
+            type="file" 
+            accept="image/*" 
+            onChange={handleImageChange} 
+            disabled={!auth.currentUser} 
+          />
+          <button 
             onClick={() => !auth.currentUser && navigate('/login')}
             disabled={isLoading}
           >
@@ -187,7 +198,10 @@ function Blog() {
                 </div>
               </div>
             ) : (
-              <p className="post-content">{post.text}</p>
+              <div>
+                <p className="post-content">{post.text}</p>
+                {post.image && <img src={post.image} alt="Post" className="post-image" />}
+              </div>
             )}
 
             <div className="post-actions">

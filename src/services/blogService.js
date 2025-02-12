@@ -11,6 +11,7 @@ import {
   deleteDoc, 
   updateDoc
 } from 'firebase/firestore';
+import { uploadToCloudinary } from './cloudinaryService'; 
 
 export const fetchPosts = async () => {
   try {
@@ -19,7 +20,7 @@ export const fetchPosts = async () => {
     
     const fetchedPosts = await Promise.all(querySnapshot.docs.map(async (docSnapshot) => {
       const postData = docSnapshot.data();
-      // Get author data
+      
       const authorRef = doc(db, 'users', postData.authorId);
       const authorSnap = await getDoc(authorRef);
       const authorData = authorSnap.exists() ? authorSnap.data() : {};
@@ -45,7 +46,7 @@ export const fetchPosts = async () => {
   }
 };
 
-export const createPost = async (text) => {
+export const createPost = async (text, image) => { 
   try {
     if (!auth.currentUser) {
       return {
@@ -54,10 +55,20 @@ export const createPost = async (text) => {
       };
     }
 
-    // Get user's current profile data
+   
     const userRef = doc(db, 'users', auth.currentUser.uid);
     const userSnap = await getDoc(userRef);
     const userData = userSnap.exists() ? userSnap.data() : {};
+
+    let imageUrl = null;
+    if (image) {
+      const uploadResult = await uploadToCloudinary(image); 
+      if (uploadResult.success) {
+        imageUrl = uploadResult.url; 
+      } else {
+        throw new Error(uploadResult.error);
+      }
+    }
 
     const postData = {
       text,
@@ -66,6 +77,7 @@ export const createPost = async (text) => {
       authorName: auth.currentUser.displayName || 'Anonymous',
       authorEmail: auth.currentUser.email,
       authorPhoto: userData.photoURL || null,
+      image: imageUrl, 
       likes: 0,
       comments: []
     };
