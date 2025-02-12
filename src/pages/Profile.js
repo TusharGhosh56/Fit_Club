@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import "../css/Profile.css"; 
 import { auth } from "../firebase/config";
-import defaultProfileImage from "../assets/images/image1.jpg"; 
+import defaultProfileImage from "../assets/profile/default_profile_image.jpg"; 
 import { logout } from "../services/authService";
-import { fetchUserProfile, updateUserProfile } from "../services/profileService";
+import { fetchUserProfile, updateUserProfile, uploadProfilePicture } from "../services/profileService";
 import { useNavigate } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 
@@ -13,6 +13,8 @@ const Profile = () => {
   const [error, setError] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [editedData, setEditedData] = useState(null);
+  const [uploadLoading, setUploadLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -99,6 +101,39 @@ const Profile = () => {
     }));
   };
 
+  const handleImageUpload = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    setUploadLoading(true);
+    setError('');
+    setSuccessMessage('');
+
+    try {
+      const result = await uploadProfilePicture(file);
+      console.log('Upload result:', result);
+
+      if (result.success) {
+        setUserData(prev => ({
+          ...prev,
+          photoURL: result.photoURL
+        }));
+        setEditedData(prev => ({
+          ...prev,
+          photoURL: result.photoURL
+        }));
+        setSuccessMessage('Profile picture updated successfully!');
+      } else {
+        setError(result.error);
+      }
+    } catch (error) {
+      console.error('Upload error:', error);
+      setError('Failed to upload image');
+    } finally {
+      setUploadLoading(false);
+    }
+  };
+
   if (loading) {
     return <div className="profile-container"><div className="loading">Loading profile...</div></div>;
   }
@@ -111,11 +146,35 @@ const Profile = () => {
       </div>
 
       {error && <div className="error-message">{error}</div>}
+      {successMessage && <div className="success-message">{successMessage}</div>}
 
       <div className="profile-content">
         <div className="profile-top">
           <div className="profile-photo-container">
-            <img src={userData?.photoURL || defaultProfileImage} alt="Profile" className="profile-photo" />
+            <img 
+              src={userData?.photoURL || defaultProfileImage} 
+              alt="Profile" 
+              className="profile-photo"
+              onError={(e) => {
+                console.error('Image failed to load');
+                e.target.src = defaultProfileImage;
+              }} 
+            />
+            {isEditing && (
+              <div className="photo-upload-overlay">
+                <input
+                  type="file"
+                  id="photo-upload"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="photo-upload-input"
+                  disabled={uploadLoading}
+                />
+                <label htmlFor="photo-upload" className="photo-upload-label">
+                  {uploadLoading ? 'Uploading...' : 'Change Photo'}
+                </label>
+              </div>
+            )}
           </div>
           <div className="profile-header">
             <h3>{userData?.fullName || "Name Not Set"}</h3>

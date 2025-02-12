@@ -6,7 +6,8 @@ import {
   orderBy, 
   getDocs, 
   serverTimestamp, 
-  doc, 
+  doc,
+  getDoc,
   deleteDoc, 
   updateDoc
 } from 'firebase/firestore';
@@ -15,10 +16,20 @@ export const fetchPosts = async () => {
   try {
     const q = query(collection(db, 'posts'), orderBy('createdAt', 'desc'));
     const querySnapshot = await getDocs(q);
-    const fetchedPosts = querySnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data(),
-      createdAt: doc.data().createdAt?.toDate().toLocaleString() || new Date().toLocaleString()
+    
+    const fetchedPosts = await Promise.all(querySnapshot.docs.map(async (docSnapshot) => {
+      const postData = docSnapshot.data();
+      // Get author data
+      const authorRef = doc(db, 'users', postData.authorId);
+      const authorSnap = await getDoc(authorRef);
+      const authorData = authorSnap.exists() ? authorSnap.data() : {};
+      
+      return {
+        id: docSnapshot.id,
+        ...postData,
+        authorPhoto: authorData.photoURL || null,
+        createdAt: postData.createdAt?.toDate().toLocaleString() || new Date().toLocaleString()
+      };
     }));
     
     return {
@@ -26,6 +37,7 @@ export const fetchPosts = async () => {
       data: fetchedPosts
     };
   } catch (error) {
+    console.error('Error fetching posts:', error);
     return {
       success: false,
       error: error.message
@@ -42,13 +54,18 @@ export const createPost = async (text) => {
       };
     }
 
+    // Get user's current profile data
+    const userRef = doc(db, 'users', auth.currentUser.uid);
+    const userSnap = await getDoc(userRef);
+    const userData = userSnap.exists() ? userSnap.data() : {};
+
     const postData = {
       text,
       createdAt: serverTimestamp(),
       authorId: auth.currentUser.uid,
       authorName: auth.currentUser.displayName || 'Anonymous',
       authorEmail: auth.currentUser.email,
-      authorPhoto: auth.currentUser.photoURL || null,
+      authorPhoto: userData.photoURL || null,
       likes: 0,
       comments: []
     };
@@ -64,6 +81,7 @@ export const createPost = async (text) => {
       }
     };
   } catch (error) {
+    console.error('Error creating post:', error);
     return {
       success: false,
       error: error.message

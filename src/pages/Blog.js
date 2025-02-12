@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth } from '../firebase/config';
 import { fetchPosts, createPost, deletePost, updatePost } from '../services/blogService';
+import defaultProfileImage from "../assets/profile/default_profile_image.jpg";
 import '../css/Blog.css';
 
 function Blog() {
@@ -46,7 +47,7 @@ function Blog() {
 
       try {
         const result = await createPost(newPost.trim());
-        
+
         if (result.success) {
           setPosts(prevPosts => [result.data, ...prevPosts]);
           setNewPost('');
@@ -93,8 +94,8 @@ function Blog() {
     try {
       const result = await updatePost(postId, editText.trim());
       if (result.success) {
-        setPosts(prevPosts => prevPosts.map(post => 
-          post.id === postId 
+        setPosts(prevPosts => prevPosts.map(post =>
+          post.id === postId
             ? { ...post, text: editText.trim(), editedAt: new Date().toLocaleString() }
             : post
         ));
@@ -115,59 +116,53 @@ function Blog() {
     setEditText('');
   };
 
-  if (isLoading && posts.length === 0) {
-    return (
-      <div className="blog">
-        <h2>Community Blog</h2>
-        <div className="loading">Loading...</div>
-      </div>
-    );
-  }
-
   return (
-    <div className="blog">
-      <h2>Community Blog</h2>
-      {error && <div className="error-message">{error}</div>}
-      <form onSubmit={handleSubmit} className="post-form">
-        <textarea
-          value={newPost}
-          onChange={(e) => setNewPost(e.target.value)}
-          placeholder={auth.currentUser ? "Share your fitness journey..." : "Please login to post"}
-          disabled={!auth.currentUser}
-        />
-        <button 
-          onClick={() => !auth.currentUser && navigate('/login')}
-          disabled={isLoading}
-        >
-          {!auth.currentUser ? "Login to Post" : isLoading ? "Posting..." : "Post"}
-        </button>
-      </form>
-      <div className="posts">
+    <div className="blog-container">
+      <div className="blog-header">
+        <h2>Community Blog</h2>
+        {error && <div className="error-message">{error}</div>}
+      </div>
+      {isLoading && posts.length === 0 ? (
+        <div className="loading">Loading...</div>
+      ) : (
+        <form onSubmit={handleSubmit} className="post-form">
+          <textarea
+            value={newPost}
+            onChange={(e) => setNewPost(e.target.value)}
+            placeholder={auth.currentUser ? "Share your fitness journey..." : "Please login to post"}
+            disabled={!auth.currentUser}
+          />
+          <button
+            onClick={() => !auth.currentUser && navigate('/login')}
+            disabled={isLoading}
+          >
+            {!auth.currentUser ? "Login to Post" : isLoading ? "Posting..." : "Post"}
+          </button>
+        </form>
+      )}
+      <div className="posts-container">
         {posts.map((post) => (
-          <div key={post.id} className="post">
+          <div key={post.id} className="post-card">
             <div className="post-header">
               <div className="author-info">
-                {post.authorPhoto ? (
-                  <img 
-                    src={post.authorPhoto} 
-                    alt={post.authorName} 
-                    className="author-photo"
-                  />
-                ) : (
-                  <div className="author-photo">
-                    <i className="fas fa-user"></i>
-                  </div>
-                )}
+                <img
+                  src={post.authorPhoto || defaultProfileImage}
+                  alt={post.authorName}
+                  className="author-photo"
+                  onError={(e) => {
+                    e.target.src = defaultProfileImage;
+                  }}
+                />
                 <div className="author-details">
                   <span className="author-name">{post.authorName}</span>
-                  <small className="author-email">{post.authorEmail}</small>
+                  <span className="post-date">{post.createdAt}</span>
                 </div>
               </div>
               <span className="post-date">
                 {post.editedAt ? `Edited: ${post.editedAt}` : post.createdAt}
               </span>
             </div>
-            
+
             {editingPost === post.id ? (
               <div className="edit-post-form">
                 <textarea
@@ -176,14 +171,14 @@ function Blog() {
                   className="edit-textarea"
                 />
                 <div className="edit-actions">
-                  <button 
+                  <button
                     onClick={() => handleUpdate(post.id)}
                     disabled={isLoading}
                     className="save-btn"
                   >
                     Save
                   </button>
-                  <button 
+                  <button
                     onClick={cancelEdit}
                     className="cancel-btn"
                   >
@@ -197,38 +192,38 @@ function Blog() {
 
             <div className="post-actions">
               <div className="action-buttons">
-                <button 
+                <button
                   className="action-button"
                   disabled={!auth.currentUser}
                 >
                   <i className="far fa-heart"></i>
                   <span>{post.likes}</span>
                 </button>
-                <button 
+                <button
                   className="action-button"
                   disabled={!auth.currentUser}
                 >
                   <i className="far fa-comment"></i>
                   <span>{post.comments?.length || 0}</span>
                 </button>
-                <button 
+                <button
                   className="action-button"
                   disabled={!auth.currentUser}
                 >
                   <i className="far fa-share-square"></i>
                 </button>
               </div>
-              
+
               {auth.currentUser?.uid === post.authorId && (
                 <div className="post-owner-actions">
-                  <button 
+                  <button
                     onClick={() => handleEdit(post)}
                     className="edit-button"
                     disabled={isLoading}
                   >
                     <i className="fas fa-edit"></i>
                   </button>
-                  <button 
+                  <button
                     onClick={() => handleDelete(post.id)}
                     className="delete-button"
                     disabled={isLoading}

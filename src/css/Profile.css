@@ -53,6 +53,7 @@
     border-radius: 50%;
     padding: 5px;
     background: linear-gradient(145deg, #FF5722, #ff8a65);
+    cursor: pointer;
 }
 
 .profile-photo {
@@ -366,5 +367,57 @@
     letter-spacing: 1px;
     box-shadow: 0 4px 15px rgba(255, 87, 34, 0.2);
     text-align: center;
+}
+
+.photo-upload-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 10px;
+  text-align: center;
+  border-bottom-left-radius: 50%;
+  border-bottom-right-radius: 50%;
+  transition: opacity 0.3s ease;
+}
+
+.photo-upload-input {
+  display: none;
+}
+
+.photo-upload-label {
+  color: white;
+  cursor: pointer;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.photo-upload-label:hover {
+  color: #FF5722;
+}
+
+.success-message {
+  background-color: rgba(76, 175, 80, 0.1);
+  color: #4CAF50;
+  padding: 1rem;
+  margin: 1rem auto;
+  border-radius: 8px;
+  border: 1px solid #4CAF50;
+  text-align: center;
+  max-width: 400px;
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
   
