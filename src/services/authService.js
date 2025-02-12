@@ -3,11 +3,26 @@ import {
   signInWithEmailAndPassword,
   signOut,
   sendPasswordResetEmail,
-  updateProfile
+  updateProfile,
+  setPersistence,
+  browserLocalPersistence
 } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { auth, db } from '../firebase/config';
 
+
+setPersistence(auth, browserLocalPersistence).catch((error) => {
+  console.error("Auth persistence error:", error);
+});
+
+export const getCurrentUser = () => {
+  return new Promise((resolve, reject) => {
+    const unsubscribe = auth.onAuthStateChanged(user => {
+      unsubscribe();
+      resolve(user);
+    }, reject);
+  });
+};
 
 export const signup = async (email, password, fullName) => {
   try {

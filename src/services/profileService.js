@@ -1,26 +1,50 @@
 import { auth, db } from '../firebase/config';
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc, setDoc } from 'firebase/firestore';
+import { setPersistence, browserLocalPersistence } from 'firebase/auth';
+
+
+setPersistence(auth, browserLocalPersistence).catch((error) => {
+  console.error("Auth persistence error:", error);
+});
 
 export const fetchUserProfile = async (userId) => {
   try {
     const userDoc = await getDoc(doc(db, 'users', userId));
     
     if (userDoc.exists()) {
+      const userData = userDoc.data();
       return {
         success: true,
         data: {
-          ...userDoc.data(),
+          ...userData,
           stats: {
-            clientsTrained: userDoc.data().stats.clientsTrained || "0",
-            successRate: userDoc.data().stats.successRate || "0%",
-            certifications: userDoc.data().stats.certifications || "0"
+            clientsTrained: userData.stats?.clientsTrained || "0",
+            successRate: userData.stats?.successRate || "0%",
+            certifications: userData.stats?.certifications || "0"
           }
         }
       };
     } else {
+   
+      const defaultData = {
+        fullName: auth.currentUser?.displayName || 'Name Not Set',
+        email: auth.currentUser?.email,
+        role: 'Member',
+        stats: {
+          clientsTrained: "0",
+          successRate: "0%",
+          certifications: "0"
+        },
+        bio: '',
+        phone: '',
+        experience: ''
+      };
+
+      await setDoc(doc(db, 'users', userId), defaultData);
+      
       return {
-        success: false,
-        error: 'User profile not found'
+        success: true,
+        data: defaultData
       };
     }
   } catch (error) {
@@ -33,6 +57,13 @@ export const fetchUserProfile = async (userId) => {
 
 export const updateUserProfile = async (userId, updatedData) => {
   try {
+    if (!auth.currentUser) {
+      return {
+        success: false,
+        error: 'User not authenticated'
+      };
+    }
+
     const userRef = doc(db, 'users', userId);
     await updateDoc(userRef, updatedData);
     
@@ -46,4 +77,4 @@ export const updateUserProfile = async (userId, updatedData) => {
       error: error.message
     };
   }
-}; 
+};
