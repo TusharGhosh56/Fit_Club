@@ -1,7 +1,9 @@
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { auth } from '../firebase/config';
 
-function ProtectedRoute({ children }) {
+const ProtectedRoute = ({ children }) => {
+  const navigate = useNavigate();
+
   if (!auth.currentUser) {
     return (
       <div className="auth-container">
@@ -9,7 +11,7 @@ function ProtectedRoute({ children }) {
           <h2>Access Denied</h2>
           <p className="auth-message">Please sign in to view your profile</p>
           <button 
-            onClick={() => window.location.href = '/login'} 
+            onClick={() => navigate('/login')} 
             className="auth-button"
           >
             Go to Login
@@ -20,6 +22,6 @@ function ProtectedRoute({ children }) {
   }
 
   return children;
-}
+};
 
 export default ProtectedRoute; 

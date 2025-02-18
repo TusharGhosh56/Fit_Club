@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import "../css/Profile.css"; 
 import { auth } from "../firebase/config";
-import defaultProfileImage from "../assets/images/image1.jpg"; 
+import defaultProfileImage from "../assets/profile/default_profile_image.jpg"; 
 import { logout } from "../services/authService";
-import { fetchUserProfile, updateUserProfile } from "../services/profileService";
+import { fetchUserProfile, updateUserProfile, uploadProfilePicture } from "../services/profileService";
 import { useNavigate } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 
@@ -13,25 +13,52 @@ const Profile = () => {
   const [error, setError] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [editedData, setEditedData] = useState(null);
+  const [uploadLoading, setUploadLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  
+  
   const navigate = useNavigate();
 
   useEffect(() => {
-    let unsubscribe;
-    let mounted = true;
+    const checkUser = async () => {
+      await new Promise(resolve => setTimeout(resolve, 5000));
+      
+      const unsubscribe = onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          localStorage.setItem('userName', user.displayName || 'Name Not Set');
 
-    const initializeAuth = async () => {
-      unsubscribe = onAuthStateChanged(auth, async (user) => {
-        if (!mounted) return;
-
-        if (!user) {
-          navigate("/login");
-          setLoading(false);
-          return;
-        }
-
-        try {
-          const result = await fetchUserProfile(user.uid);
-          if (mounted) {
+          const storedUserName = localStorage.getItem('userName');
+          if (storedUserName) {
+            setUserData({
+              fullName: storedUserName,
+              email: user.email,
+              role: 'Member',
+              photoURL: user.photoURL || null,
+              stats: {
+                clientsTrained: "0",
+                successRate: "0%",
+                certifications: "0"
+              },
+              bio: '',
+              phone: '',
+              experience: ''
+            });
+            setEditedData({
+              fullName: storedUserName,
+              email: user.email,
+              role: 'Member',
+              photoURL: user.photoURL || null,
+              stats: {
+                clientsTrained: "0",
+                successRate: "0%",
+                certifications: "0"
+              },
+              bio: '',
+              phone: '',
+              experience: ''
+            });
+          } else {
+            const result = await fetchUserProfile(user.uid);
             if (result.success) {
               setUserData(result.data);
               setEditedData(result.data);
@@ -40,28 +67,23 @@ const Profile = () => {
               setError(result.error);
             }
           }
-        } catch (err) {
-          if (mounted) {
-            setError("Failed to load profile data");
-          }
-        } finally {
-          if (mounted) {
-            setLoading(false);
-          }
+        } else {
+          setError("Access Denied");
         }
+        setLoading(false);
       });
+
+      return () => unsubscribe();
     };
 
-    initializeAuth();
-
-    return () => {
-      mounted = false;
-      if (unsubscribe) unsubscribe();
-    };
+    checkUser();
   }, [navigate]);
 
   const handleLogout = async () => {
     await logout();
+   
+    setUserData(null);
+    localStorage.removeItem("isLoggedIn");
     navigate("/login");
   };
 
@@ -73,6 +95,7 @@ const Profile = () => {
       if (result.success) {
         setUserData(editedData);
         setIsEditing(false);
+        setSuccessMessage("Profile updated successfully!");
         setError("");
       } else {
         setError(result.error);
@@ -99,8 +122,42 @@ const Profile = () => {
     }));
   };
 
+  const handleImageUpload = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    setUploadLoading(true);
+    setError('');
+    setSuccessMessage('');
+
+    try {
+      const result = await uploadProfilePicture(file);
+      if (result.success) {
+        setUserData((prev) => ({
+          ...prev,
+          photoURL: result.photoURL
+        }));
+        setEditedData((prev) => ({
+          ...prev,
+          photoURL: result.photoURL
+        }));
+        setSuccessMessage('Profile picture updated successfully!');
+      } else {
+        setError(result.error);
+      }
+    } catch (error) {
+      setError('Failed to upload image');
+    } finally {
+      setUploadLoading(false);
+    }
+  };
+
   if (loading) {
-    return <div className="profile-container"><div className="loading">Loading profile...</div></div>;
+    return <div className="loading">Loading...</div>;
+  }
+
+  if (!userData && !loading) {
+    return <div className="error-message">{error}</div>;
   }
 
   return (
@@ -111,11 +168,35 @@ const Profile = () => {
       </div>
 
       {error && <div className="error-message">{error}</div>}
+      {successMessage && <div className="success-message">{successMessage}</div>}
 
       <div className="profile-content">
         <div className="profile-top">
           <div className="profile-photo-container">
-            <img src={userData?.photoURL || defaultProfileImage} alt="Profile" className="profile-photo" />
+            <img 
+              src={userData?.photoURL || defaultProfileImage} 
+              alt="Profile" 
+              className="profile-photo"
+              onError={(e) => {
+                console.error('Image failed to load');
+                e.target.src = defaultProfileImage;
+              }} 
+            />
+            {isEditing && (
+              <div className="photo-upload-overlay">
+                <input
+                  type="file"
+                  id="photo-upload"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="photo-upload-input"
+                  disabled={uploadLoading}
+                />
+                <label htmlFor="photo-upload" className="photo-upload-label">
+                  {uploadLoading ? 'Uploading...' : 'Change Photo'}
+                </label>
+              </div>
+            )}
           </div>
           <div className="profile-header">
             <h3>{userData?.fullName || "Name Not Set"}</h3>

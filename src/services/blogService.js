@@ -6,19 +6,38 @@ import {
   orderBy, 
   getDocs, 
   serverTimestamp, 
-  doc, 
+  doc,
+  getDoc,
   deleteDoc, 
-  updateDoc
+  updateDoc,
+  where
 } from 'firebase/firestore';
+import { uploadToCloudinary } from './cloudinaryService'; 
 
 export const fetchPosts = async () => {
   try {
     const q = query(collection(db, 'posts'), orderBy('createdAt', 'desc'));
     const querySnapshot = await getDocs(q);
-    const fetchedPosts = querySnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data(),
-      createdAt: doc.data().createdAt?.toDate().toLocaleString() || new Date().toLocaleString()
+    
+    const fetchedPosts = await Promise.all(querySnapshot.docs.map(async (docSnapshot) => {
+      const postData = docSnapshot.data();
+      
+      const authorRef = doc(db, 'users', postData.authorId);
+      const authorSnap = await getDoc(authorRef);
+      const authorData = authorSnap.exists() ? authorSnap.data() : {};
+      
+      // Fetch replies for the current post
+      const repliesQuery = query(collection(db, 'replies'), where('postId', '==', docSnapshot.id));
+      const repliesSnapshot = await getDocs(repliesQuery);
+      const replies = repliesSnapshot.docs.map(replyDoc => replyDoc.data().replyText);
+
+      return {
+        id: docSnapshot.id,
+        ...postData,
+        authorPhoto: authorData.photoURL || null,
+        createdAt: postData.createdAt?.toDate().toLocaleString() || new Date().toLocaleString(),
+        replies: replies // Set replies from the replies collection
+      };
     }));
     
     return {
@@ -26,6 +45,7 @@ export const fetchPosts = async () => {
       data: fetchedPosts
     };
   } catch (error) {
+    console.error('Error fetching posts:', error);
     return {
       success: false,
       error: error.message
@@ -33,7 +53,7 @@ export const fetchPosts = async () => {
   }
 };
 
-export const createPost = async (text) => {
+export const createPost = async (text, image) => { 
   try {
     if (!auth.currentUser) {
       return {
@@ -42,15 +62,31 @@ export const createPost = async (text) => {
       };
     }
 
+    const userRef = doc(db, 'users', auth.currentUser.uid);
+    const userSnap = await getDoc(userRef);
+    const userData = userSnap.exists() ? userSnap.data() : {};
+
+    let imageUrl = null;
+    if (image) {
+      const uploadResult = await uploadToCloudinary(image); 
+      if (uploadResult.success) {
+        imageUrl = uploadResult.url; 
+      } else {
+        throw new Error(uploadResult.error);
+      }
+    }
+
     const postData = {
       text,
       createdAt: serverTimestamp(),
       authorId: auth.currentUser.uid,
       authorName: auth.currentUser.displayName || 'Anonymous',
       authorEmail: auth.currentUser.email,
-      authorPhoto: auth.currentUser.photoURL || null,
+      authorPhoto: userData.photoURL || null,
+      image: imageUrl, 
       likes: 0,
-      comments: []
+      comments: [],
+      replies: []
     };
 
     const docRef = await addDoc(collection(db, 'posts'), postData);
@@ -64,6 +100,7 @@ export const createPost = async (text) => {
       }
     };
   } catch (error) {
+    console.error('Error creating post:', error);
     return {
       success: false,
       error: error.message
@@ -92,6 +129,23 @@ export const updatePost = async (postId, newText) => {
     return { success: true };
   } catch (error) {
     console.error("Error updating post:", error);
+    return { success: false, error: error.message };
+  }
+};
+
+export const saveReply = async (postId, replyText) => {
+  try {
+    const replyData = {
+      postId: postId,
+      replyText: replyText,
+      createdAt: new Date(),
+      userId: auth.currentUser.uid,
+    };
+
+    await addDoc(collection(db, 'replies'), replyData);
+    return { success: true };
+  } catch (error) {
+    console.error('Error saving reply:', error);
     return { success: false, error: error.message };
   }
 };
