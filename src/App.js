@@ -9,6 +9,7 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Profile from './pages/Profile';
 import ProtectedRoute from './components/ProtectedRoute';
+import UserProfile from './pages/UserProfile';
 import './App.css';
 
 function App() {
@@ -32,6 +33,7 @@ function App() {
                 </ProtectedRoute>
               } 
             />
+            <Route path="/profile/:userId" element={<UserProfile />} />
           </Routes>
         </main>
         <Footer />

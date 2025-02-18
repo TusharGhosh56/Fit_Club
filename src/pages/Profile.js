@@ -14,26 +14,51 @@ const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedData, setEditedData] = useState(null);
   const [uploadLoading, setUploadLoading] = useState(false);
-  const [successMessage, setSuccessMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState("");
+  
+  
   const navigate = useNavigate();
 
   useEffect(() => {
-    let unsubscribe;
-    let mounted = true;
+    const checkUser = async () => {
+      await new Promise(resolve => setTimeout(resolve, 5000));
+      
+      const unsubscribe = onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          localStorage.setItem('userName', user.displayName || 'Name Not Set');
 
-    const initializeAuth = async () => {
-      unsubscribe = onAuthStateChanged(auth, async (user) => {
-        if (!mounted) return;
-
-        if (!user) {
-          navigate("/login");
-          setLoading(false);
-          return;
-        }
-
-        try {
-          const result = await fetchUserProfile(user.uid);
-          if (mounted) {
+          const storedUserName = localStorage.getItem('userName');
+          if (storedUserName) {
+            setUserData({
+              fullName: storedUserName,
+              email: user.email,
+              role: 'Member',
+              photoURL: user.photoURL || null,
+              stats: {
+                clientsTrained: "0",
+                successRate: "0%",
+                certifications: "0"
+              },
+              bio: '',
+              phone: '',
+              experience: ''
+            });
+            setEditedData({
+              fullName: storedUserName,
+              email: user.email,
+              role: 'Member',
+              photoURL: user.photoURL || null,
+              stats: {
+                clientsTrained: "0",
+                successRate: "0%",
+                certifications: "0"
+              },
+              bio: '',
+              phone: '',
+              experience: ''
+            });
+          } else {
+            const result = await fetchUserProfile(user.uid);
             if (result.success) {
               setUserData(result.data);
               setEditedData(result.data);
@@ -42,28 +67,23 @@ const Profile = () => {
               setError(result.error);
             }
           }
-        } catch (err) {
-          if (mounted) {
-            setError("Failed to load profile data");
-          }
-        } finally {
-          if (mounted) {
-            setLoading(false);
-          }
+        } else {
+          setError("Access Denied");
         }
+        setLoading(false);
       });
+
+      return () => unsubscribe();
     };
 
-    initializeAuth();
-
-    return () => {
-      mounted = false;
-      if (unsubscribe) unsubscribe();
-    };
+    checkUser();
   }, [navigate]);
 
   const handleLogout = async () => {
     await logout();
+   
+    setUserData(null);
+    localStorage.removeItem("isLoggedIn");
     navigate("/login");
   };
 
@@ -75,6 +95,7 @@ const Profile = () => {
       if (result.success) {
         setUserData(editedData);
         setIsEditing(false);
+        setSuccessMessage("Profile updated successfully!");
         setError("");
       } else {
         setError(result.error);
@@ -111,14 +132,12 @@ const Profile = () => {
 
     try {
       const result = await uploadProfilePicture(file);
-      console.log('Upload result:', result);
-
       if (result.success) {
-        setUserData(prev => ({
+        setUserData((prev) => ({
           ...prev,
           photoURL: result.photoURL
         }));
-        setEditedData(prev => ({
+        setEditedData((prev) => ({
           ...prev,
           photoURL: result.photoURL
         }));
@@ -127,7 +146,6 @@ const Profile = () => {
         setError(result.error);
       }
     } catch (error) {
-      console.error('Upload error:', error);
       setError('Failed to upload image');
     } finally {
       setUploadLoading(false);
@@ -135,7 +153,11 @@ const Profile = () => {
   };
 
   if (loading) {
-    return <div className="profile-container"><div className="loading">Loading profile...</div></div>;
+    return <div className="loading">Loading...</div>;
+  }
+
+  if (!userData && !loading) {
+    return <div className="error-message">{error}</div>;
   }
 
   return (

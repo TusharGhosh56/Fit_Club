@@ -9,7 +9,8 @@ import {
   doc,
   getDoc,
   deleteDoc, 
-  updateDoc
+  updateDoc,
+  where
 } from 'firebase/firestore';
 import { uploadToCloudinary } from './cloudinaryService'; 
 
@@ -25,11 +26,17 @@ export const fetchPosts = async () => {
       const authorSnap = await getDoc(authorRef);
       const authorData = authorSnap.exists() ? authorSnap.data() : {};
       
+      // Fetch replies for the current post
+      const repliesQuery = query(collection(db, 'replies'), where('postId', '==', docSnapshot.id));
+      const repliesSnapshot = await getDocs(repliesQuery);
+      const replies = repliesSnapshot.docs.map(replyDoc => replyDoc.data().replyText);
+
       return {
         id: docSnapshot.id,
         ...postData,
         authorPhoto: authorData.photoURL || null,
-        createdAt: postData.createdAt?.toDate().toLocaleString() || new Date().toLocaleString()
+        createdAt: postData.createdAt?.toDate().toLocaleString() || new Date().toLocaleString(),
+        replies: replies // Set replies from the replies collection
       };
     }));
     
@@ -55,7 +62,6 @@ export const createPost = async (text, image) => {
       };
     }
 
-   
     const userRef = doc(db, 'users', auth.currentUser.uid);
     const userSnap = await getDoc(userRef);
     const userData = userSnap.exists() ? userSnap.data() : {};
@@ -79,7 +85,8 @@ export const createPost = async (text, image) => {
       authorPhoto: userData.photoURL || null,
       image: imageUrl, 
       likes: 0,
-      comments: []
+      comments: [],
+      replies: []
     };
 
     const docRef = await addDoc(collection(db, 'posts'), postData);
@@ -122,6 +129,23 @@ export const updatePost = async (postId, newText) => {
     return { success: true };
   } catch (error) {
     console.error("Error updating post:", error);
+    return { success: false, error: error.message };
+  }
+};
+
+export const saveReply = async (postId, replyText) => {
+  try {
+    const replyData = {
+      postId: postId,
+      replyText: replyText,
+      createdAt: new Date(),
+      userId: auth.currentUser.uid,
+    };
+
+    await addDoc(collection(db, 'replies'), replyData);
+    return { success: true };
+  } catch (error) {
+    console.error('Error saving reply:', error);
     return { success: false, error: error.message };
   }
 };

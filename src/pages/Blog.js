@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth } from '../firebase/config';
-import { fetchPosts, createPost, deletePost, updatePost } from '../services/blogService';
+import { fetchPosts, createPost, deletePost, updatePost, saveReply } from '../services/blogService';
 import defaultProfileImage from "../assets/profile/default_profile_image.jpg";
 import '../css/Blog.css';
 
@@ -13,6 +13,8 @@ function Blog() {
   const [error, setError] = useState('');
   const [editingPost, setEditingPost] = useState(null);
   const [editText, setEditText] = useState('');
+  const [replyText, setReplyText] = useState('');
+  const [replyPostId, setReplyPostId] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -121,6 +123,39 @@ function Blog() {
     setEditText('');
   };
 
+  const handleProfileClick = (authorId) => {
+    navigate(`/profile/${authorId}`);
+  };
+
+  const handleChatClick = (authorId) => {
+    console.log(`Chat with user ID: ${authorId}`);
+  };
+
+  const handleReplyClick = (authorName, postId) => {
+    setReplyText(`@${authorName} `);
+    setReplyPostId(postId);
+  };
+
+  const handleReplySubmit = async () => {
+    if (replyPostId) {
+      const updatedPosts = posts.map(post => {
+        if (post.id === replyPostId) {
+          post.replies = post.replies || [];
+          post.replies.push(replyText);
+        }
+        return post;
+      });
+      setPosts(updatedPosts);
+      setReplyText('');
+      setReplyPostId(null);
+
+      const result = await saveReply(replyPostId, replyText);
+      if (!result.success) {
+        console.error('Error saving reply:', result.error);
+      }
+    }
+  };
+
   return (
     <div className="blog-container">
       <div className="blog-header">
@@ -156,14 +191,24 @@ function Blog() {
           <div key={post.id} className="post-card">
             <div className="post-header">
               <div className="author-info">
-                <img
-                  src={post.authorPhoto || defaultProfileImage}
-                  alt={post.authorName}
-                  className="author-photo"
-                  onError={(e) => {
-                    e.target.src = defaultProfileImage;
-                  }}
-                />
+                <div className="author-photo-container">
+                  <img
+                    src={post.authorPhoto || defaultProfileImage}
+                    alt={post.authorName}
+                    className="author-photo"
+                    onError={(e) => {
+                      e.target.src = defaultProfileImage;
+                    }}
+                    onClick={() => handleProfileClick(post.authorId)}
+                  />
+                  <div className="dropdown">
+                    <button className="dropbtn"></button>
+                    <div className="dropdown-content">
+                      <button onClick={() => handleProfileClick(post.authorId)}>Profile</button>
+                      <button onClick={() => handleChatClick(post.authorId)}>Chat</button>
+                    </div>
+                  </div>
+                </div>
                 <div className="author-details">
                   <span className="author-name">{post.authorName}</span>
                   <span className="post-date">{post.createdAt}</span>
@@ -173,6 +218,16 @@ function Blog() {
                 {post.editedAt ? `Edited: ${post.editedAt}` : post.createdAt}
               </span>
             </div>
+
+            {post.replies && post.replies.length > 0 && (
+              <div className="replies-container">
+                {post.replies.map((reply, index) => (
+                  <div key={index} className="reply">
+                    <strong>{reply}</strong>
+                  </div>
+                ))}
+              </div>
+            )}
 
             {editingPost === post.id ? (
               <div className="edit-post-form">
@@ -210,19 +265,10 @@ function Blog() {
                   className="action-button"
                   disabled={!auth.currentUser}
                 >
-                  <i className="far fa-heart"></i>
-                  <span>{post.likes}</span>
                 </button>
                 <button
                   className="action-button"
-                  disabled={!auth.currentUser}
-                >
-                  <i className="far fa-comment"></i>
-                  <span>{post.comments?.length || 0}</span>
-                </button>
-                <button
-                  className="action-button"
-                  disabled={!auth.currentUser}
+                  onClick={() => handleReplyClick(post.authorName, post.id)}
                 >
                   <i className="far fa-share-square"></i>
                 </button>
@@ -247,6 +293,22 @@ function Blog() {
                 </div>
               )}
             </div>
+
+            {replyPostId === post.id && (
+              <div className="reply-input">
+                <input 
+                  type="text" 
+                  value={replyText}
+                  onChange={(e) => setReplyText(e.target.value)}
+                  placeholder="Type your reply..."
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      handleReplySubmit();
+                    }
+                  }}
+                />
+              </div>
+            )}
           </div>
         ))}
       </div>

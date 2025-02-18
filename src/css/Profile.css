@@ -420,4 +420,12 @@
     transform: translateY(0);
   }
 }
+
+.loading {
+    text-align: center;
+    padding: 2rem;
+    color: #888;
+    font-size: 1.5rem;
+    margin-top: 20%;
+}
   
