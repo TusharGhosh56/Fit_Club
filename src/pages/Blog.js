@@ -16,7 +16,7 @@ function Blog() {
   const [editText, setEditText] = useState('');
   const [replyText, setReplyText] = useState('');
   const [replyPostId, setReplyPostId] = useState(null);
-
+  
   const navigate = useNavigate();
 
   useEffect(() => {
