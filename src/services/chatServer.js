@@ -1,44 +1,33 @@
-import { io } from 'socket.io-client';
+const express = require('express');
+const http = require('http');
+const socketIo = require('socket.io');
 
-let socket = null;
+const app = express();
+const server = http.createServer(app);
+const io = socketIo(server);
 
-export const initializeSocket = () => {
-  if (!socket) {
-    socket = io('http://localhost:3001', {
-      cors: {
-        origin: "http://localhost:3000",
-        methods: ["GET", "POST"]
-      }
-    });
+const PORT = process.env.PORT || 4000;
 
-    // Set up socket event handlers
-    socket.on('connect', () => {
-      console.log('Connected to chat server');
-    });
+// Serve static files if needed
+app.use(express.static('public'));
 
-    socket.on('connect_error', (error) => {
-      console.error('Connection error:', error);
-    });
-  }
+// Handle socket connections
+io.on('connection', (socket) => {
+  console.log('New client connected');
 
-  return socket;
-};
+  // Listen for chat messages
+  socket.on('sendMessage', (message) => {
+    // Broadcast the message to all clients
+    io.emit('receiveMessage', message);
+  });
 
-export const disconnectSocket = () => {
-  if (socket) {
-    socket.disconnect();
-    socket = null;
-  }
-};
+  // Handle disconnection
+  socket.on('disconnect', () => {
+    console.log('Client disconnected');
+  });
+});
 
-export const sendMessage = (to, message) => {
-  if (socket) {
-    socket.emit('private_message', { to, message });
-  }
-};
-
-export const joinChat = (userData) => {
-  if (socket) {
-    socket.emit('user_join', userData);
-  }
-}; 
+// Start the server
+server.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+}); 

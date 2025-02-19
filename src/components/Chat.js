@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { io } from 'socket.io-client';
 import { auth } from '../firebase/config';
 import '../css/Chat.css';
-import { initializeSocket } from '../services/chatServer';
+import { initializeSocket } from '../services/chatserver.js';
 
 // Replace direct socket initialization with service
 const socket = initializeSocket();

@@ -4,7 +4,7 @@ import { auth } from '../firebase/config';
 import { fetchPosts, createPost, deletePost, updatePost, saveReply } from '../services/blogService';
 import defaultProfileImage from "../assets/profile/default_profile_image.jpg";
 import '../css/Blog.css';
-import Chat from './Chat';
+import Chat from '../components/Chat';
 
 function Blog() {
   const [posts, setPosts] = useState([]);
