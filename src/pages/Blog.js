@@ -4,7 +4,7 @@ import { auth } from '../firebase/config';
 import { fetchPosts, createPost, deletePost, updatePost, saveReply } from '../services/blogService';
 import defaultProfileImage from "../assets/profile/default_profile_image.jpg";
 import '../css/Blog.css';
-import Chat from './Chat';
+
 
 function Blog() {
   const [posts, setPosts] = useState([]);
@@ -16,8 +16,7 @@ function Blog() {
   const [editText, setEditText] = useState('');
   const [replyText, setReplyText] = useState('');
   const [replyPostId, setReplyPostId] = useState(null);
-  const [chatOpen, setChatOpen] = useState(false);
-  const [chatRecipientId, setChatRecipientId] = useState(null);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -130,11 +129,6 @@ function Blog() {
     navigate(`/profile/${authorId}`);
   };
 
-  const handleChatClick = (authorId) => {
-    setChatRecipientId(authorId);
-    setChatOpen(true);
-  };
-
   const handleReplyClick = (authorName, postId) => {
     setReplyText(`@${authorName} `);
     setReplyPostId(postId);
@@ -209,7 +203,7 @@ function Blog() {
                     <button className="dropbtn"></button>
                     <div className="dropdown-content">
                       <button onClick={() => handleProfileClick(post.authorId)}>Profile</button>
-                      <button onClick={() => handleChatClick(post.authorId)}>Chat</button>
+                      <button onClick={() => handleProfileClick(post.authorId)}>Chat</button>
                     </div>
                   </div>
                 </div>
@@ -316,15 +310,6 @@ function Blog() {
           </div>
         ))}
       </div>
-      {chatOpen && chatRecipientId && (
-        <Chat 
-          recipientId={chatRecipientId}
-          onClose={() => {
-            setChatOpen(false);
-            setChatRecipientId(null);
-          }}
-        />
-      )}
     </div>
   );
 }
