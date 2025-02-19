@@ -4,6 +4,7 @@ import { auth } from '../firebase/config';
 import { fetchPosts, createPost, deletePost, updatePost, saveReply } from '../services/blogService';
 import defaultProfileImage from "../assets/profile/default_profile_image.jpg";
 import '../css/Blog.css';
+import Chat from './Chat';
 
 function Blog() {
   const [posts, setPosts] = useState([]);
@@ -15,6 +16,8 @@ function Blog() {
   const [editText, setEditText] = useState('');
   const [replyText, setReplyText] = useState('');
   const [replyPostId, setReplyPostId] = useState(null);
+  const [chatOpen, setChatOpen] = useState(false);
+  const [chatRecipientId, setChatRecipientId] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -128,7 +131,8 @@ function Blog() {
   };
 
   const handleChatClick = (authorId) => {
-    console.log(`Chat with user ID: ${authorId}`);
+    setChatRecipientId(authorId);
+    setChatOpen(true);
   };
 
   const handleReplyClick = (authorName, postId) => {
@@ -312,6 +316,15 @@ function Blog() {
           </div>
         ))}
       </div>
+      {chatOpen && chatRecipientId && (
+        <Chat 
+          recipientId={chatRecipientId}
+          onClose={() => {
+            setChatOpen(false);
+            setChatRecipientId(null);
+          }}
+        />
+      )}
     </div>
   );
 }
