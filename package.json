@@ -3,21 +3,28 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "cloudinary": "^2.5.1",
+    "cors": "^2.8.5",
     "cra-template": "1.2.0",
     "eslint": "^8.57.1",
+    "express": "^4.21.2",
     "firebase": "^11.2.0",
     "firebase-admin": "^13.0.2",
+    "imagekit": "^6.0.0",
+    "imagekit-javascript": "^3.0.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.1.1",
     "react-scripts": "5.0.1",
+    "socket.io-client": "^4.8.1",
     "web-vitals": "^4.2.4"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "server": "node server.js"
   },
   "eslintConfig": {
     "extends": [
