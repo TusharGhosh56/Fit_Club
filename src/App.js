@@ -10,6 +10,7 @@ import Signup from './pages/Signup';
 import Profile from './pages/Profile';
 import ProtectedRoute from './components/ProtectedRoute';
 import UserProfile from './pages/UserProfile';
+import Chat from './pages/Chat';
 import './App.css';
 
 function App() {
@@ -34,6 +35,7 @@ function App() {
               } 
             />
             <Route path="/profile/:userId" element={<UserProfile />} />
+            <Route path="/chat/:userId" element={<Chat />} />
           </Routes>
         </main>
         <Footer />
