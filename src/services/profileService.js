@@ -1,5 +1,5 @@
 import { auth, db } from '../firebase/config';
-import { doc, getDoc, updateDoc, setDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc} from 'firebase/firestore';
 import { setPersistence, browserLocalPersistence, updateProfile } from 'firebase/auth';
 import { uploadToCloudinary } from './cloudinaryService';
 
@@ -16,6 +16,7 @@ export const fetchUserProfile = async (userId) => {
       return {
         success: true,
         data: {
+          id: userDoc.id,
           ...userData,
           photoURL: userData.photoURL || null,
           stats: {
@@ -25,30 +26,9 @@ export const fetchUserProfile = async (userId) => {
           }
         }
       };
+    } else {
+      return { success: false, error: 'User not found' };
     }
-
-    if (!auth.currentUser) {
-      return { success: false, error: "User not authenticated" };
-    }
-
-    const defaultData = {
-      fullName: auth.currentUser.displayName || 'Name Not Set',
-      email: auth.currentUser.email,
-      role: 'Member',
-      photoURL: null,
-      stats: {
-        clientsTrained: "0",
-        successRate: "0%",
-        certifications: "0"
-      },
-      bio: '',
-      phone: '',
-      experience: ''
-    };
-
-    await setDoc(doc(db, 'users', userId), defaultData);
-
-    return { success: true, data: defaultData };
   } catch (error) {
     return { success: false, error: error.message };
   }

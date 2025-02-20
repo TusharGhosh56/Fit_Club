@@ -213,6 +213,7 @@ function Blog() {
                 </div>
                 <div className="author-details">
                   <span className="author-name">{post.authorName}</span>
+                  <span className="author-role">{post.authorRole}</span>
                   <span className="post-date">{post.createdAt}</span>
                 </div>
               </div>

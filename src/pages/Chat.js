@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { auth } from '../firebase/config';
 import { useNavigate, useParams } from 'react-router-dom';
-import { sendMessage, fetchChatHistory } from '../services/chatService';
+import { sendMessage } from '../services/chatService';
 import { fetchUserProfile } from '../services/profileService';
 import defaultProfileImage from "../assets/profile/default_profile_image.jpg";
 import '../css/Chat.css';
 import { onSnapshot, query, collection, where, orderBy } from 'firebase/firestore';
 import { db } from '../firebase/config';
+import { onAuthStateChanged } from 'firebase/auth';
 
 function Chat() {
   const [messages, setMessages] = useState([]);
@@ -15,19 +16,20 @@ function Chat() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const messagesEndRef = useRef(null);
-  const { userId } = useParams(); // userId of the person to chat with
+  const { userId } = useParams(); 
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!auth.currentUser) {
-      navigate('/login');
-      return;
-    }
+    const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        navigate('/login'); 
+      }
+    });
 
     const loadChatData = async () => {
       try {
         setLoading(true);
-        // Fetch chat user's profile
+        
         if (userId) {
           const userResult = await fetchUserProfile(userId);
           if (userResult.success) {
@@ -35,7 +37,6 @@ function Chat() {
           }
         }
 
-        // Set up real-time listener for messages
         const unsubscribe = onSnapshot(
           query(
             collection(db, 'chats'),
@@ -59,7 +60,6 @@ function Chat() {
           }
         );
 
-        // Cleanup subscription on unmount
         return () => unsubscribe();
       } catch (error) {
         setError('Failed to load chat data');
@@ -68,11 +68,9 @@ function Chat() {
     };
 
     loadChatData();
-  }, [userId, navigate]);
 
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+    return () => unsubscribeAuth(); 
+  }, [userId, navigate]);
 
   const handleSend = async (e) => {
     e.preventDefault();

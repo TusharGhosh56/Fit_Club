@@ -122,7 +122,6 @@
   align-items: center;
   gap: 1rem;
   padding: 1rem;
-  background: #1a1a1a;
   border-radius: 8px;
   margin-bottom: 2rem;
 }
@@ -161,6 +160,6 @@
 
 .message-time {
   font-size: 0.8rem;
-  color: #888;
+  color: #ffffff;
   margin-top: 0.3rem;
 } 
