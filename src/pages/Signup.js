@@ -10,7 +10,8 @@ function Signup() {
     name: '',
     email: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    isTrainer: false,
   });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -20,9 +21,16 @@ function Signup() {
     const { id, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [id]: value
+      [id]: value,
     }));
     setError('');
+  };
+
+  const handleCheckboxChange = () => {
+    setFormData(prev => ({
+      ...prev,
+      isTrainer: !prev.isTrainer,
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -30,17 +38,15 @@ function Signup() {
     setIsLoading(true);
     setError('');
 
-
     const validationErrors = getValidationErrors(formData);
-    if (Object.keys(validationErrors).length > 0) {
-      setError(Object.values(validationErrors)[0]);
+    if (validationErrors.length > 0) {
+      setError(validationErrors.join(', '));
       setIsLoading(false);
       return;
     }
 
     try {
-      const result = await signupUser(formData.email, formData.password, formData.name);
-      
+      const result = await signupUser(formData.email, formData.password, formData.name, formData.isTrainer);
       if (result.success) {
         setSuccessMessage('Account created successfully! Redirecting to login...');
         setTimeout(() => {
@@ -110,6 +116,16 @@ function Signup() {
               required 
               placeholder="Confirm your password"
             />
+          </div>
+          <div className="form-group">
+            <label>
+              Are you a trainer?
+              <input
+                type="checkbox"
+                checked={formData.isTrainer}
+                onChange={handleCheckboxChange}
+              />
+            </label>
           </div>
           <button 
             type="submit" 

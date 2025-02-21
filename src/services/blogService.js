@@ -25,8 +25,8 @@ export const fetchPosts = async () => {
       const authorRef = doc(db, 'users', postData.authorId);
       const authorSnap = await getDoc(authorRef);
       const authorData = authorSnap.exists() ? authorSnap.data() : {};
+
       
-      // Fetch replies for the current post
       const repliesQuery = query(collection(db, 'replies'), where('postId', '==', docSnapshot.id));
       const repliesSnapshot = await getDocs(repliesQuery);
       const replies = repliesSnapshot.docs.map(replyDoc => replyDoc.data().replyText);
@@ -35,8 +35,9 @@ export const fetchPosts = async () => {
         id: docSnapshot.id,
         ...postData,
         authorPhoto: authorData.photoURL || null,
+        authorRole: authorData.role || 'User', 
         createdAt: postData.createdAt?.toDate().toLocaleString() || new Date().toLocaleString(),
-        replies: replies // Set replies from the replies collection
+        replies: replies 
       };
     }));
     
@@ -82,6 +83,7 @@ export const createPost = async (text, image) => {
       authorId: auth.currentUser.uid,
       authorName: auth.currentUser.displayName || 'Anonymous',
       authorEmail: auth.currentUser.email,
+      authorRole: userData.role || 'User', 
       authorPhoto: userData.photoURL || null,
       image: imageUrl, 
       likes: 0,

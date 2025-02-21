@@ -149,7 +149,9 @@
     font-size: 0.9rem;
     font-style: italic;
 }
-
+.post-card{
+    margin-top:100px ;
+}
 .post-content {
     color: #f5f5f5;
     line-height: 1.8;
@@ -372,7 +374,7 @@
 }
 
 .post-image {
-    max-width: 100%;
+    max-width: 45%;
     border-radius: 10px;
     margin-top: 1rem;
 }
