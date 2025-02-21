@@ -29,18 +29,21 @@
 
 .form-group {
   margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
 }
 
 .form-group label {
-  display: block;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0;
   color: #333;
   font-weight: 500;
+  flex-grow: 1;
 }
 
 .form-group input {
   width: 100%;
   padding: 0.8rem;
+  margin-top: 0px;
   border: 2px solid #eee;
   border-radius: 4px;
   font-size: 1rem;
@@ -50,6 +53,11 @@
 .form-group input:focus {
   border-color: #ff4d4d;
   outline: none;
+}
+
+.form-group input[type="checkbox"] {
+  margin-left: 10px;
+  width: auto;
 }
 
 .auth-button {
@@ -165,3 +173,19 @@
   margin: 1.5rem 0;
   font-size: 1.1rem;
 } 
+
+#confirmPassword{
+  width: 90%;
+}
+
+#password{
+  width: 67%;
+}
+
+#email{
+  width: 67%;
+}
+
+#name{
+  width: 67%;
+}

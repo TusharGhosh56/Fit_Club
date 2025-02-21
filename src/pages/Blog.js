@@ -129,6 +129,10 @@ function Blog() {
     navigate(`/profile/${authorId}`);
   };
 
+  const handleChatClick = (authorId) => {
+    navigate(`/chat/${authorId}`);
+  };
+
   const handleReplyClick = (authorName, postId) => {
     setReplyText(`@${authorName} `);
     setReplyPostId(postId);
@@ -203,12 +207,13 @@ function Blog() {
                     <button className="dropbtn"></button>
                     <div className="dropdown-content">
                       <button onClick={() => handleProfileClick(post.authorId)}>Profile</button>
-                      <button onClick={() => handleProfileClick(post.authorId)}>Chat</button>
+                      <button onClick={() => handleChatClick(post.authorId)}>Chat</button>
                     </div>
                   </div>
                 </div>
                 <div className="author-details">
                   <span className="author-name">{post.authorName}</span>
+                  <span className="author-role">{post.authorRole}</span>
                   <span className="post-date">{post.createdAt}</span>
                 </div>
               </div>

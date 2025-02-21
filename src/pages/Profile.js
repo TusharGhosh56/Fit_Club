@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import "../css/Profile.css"; 
+import "../css/Profile.css";
 import { auth } from "../firebase/config";
-import defaultProfileImage from "../assets/profile/default_profile_image.jpg"; 
+import defaultProfileImage from "../assets/profile/default_profile_image.jpg";
 import { logout } from "../services/authService";
 import { fetchUserProfile, updateUserProfile, uploadProfilePicture } from "../services/profileService";
 import { useNavigate } from "react-router-dom";
@@ -15,73 +15,34 @@ const Profile = () => {
   const [editedData, setEditedData] = useState(null);
   const [uploadLoading, setUploadLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
-  
-  
+
   const navigate = useNavigate();
 
   useEffect(() => {
     const checkUser = async () => {
-      await new Promise(resolve => setTimeout(resolve, 5000));
-      
       const unsubscribe = onAuthStateChanged(auth, async (user) => {
         if (user) {
-          localStorage.setItem('userName', user.displayName || 'Name Not Set');
-
-          const storedUserName = localStorage.getItem('userName');
-          if (storedUserName) {
-            setUserData({
-              fullName: storedUserName,
-              email: user.email,
-              role: 'Member',
-              photoURL: user.photoURL || null,
-              stats: {
-                clientsTrained: "0",
-                successRate: "0%",
-                certifications: "0"
-              },
-              bio: '',
-              phone: '',
-              experience: ''
-            });
-            setEditedData({
-              fullName: storedUserName,
-              email: user.email,
-              role: 'Member',
-              photoURL: user.photoURL || null,
-              stats: {
-                clientsTrained: "0",
-                successRate: "0%",
-                certifications: "0"
-              },
-              bio: '',
-              phone: '',
-              experience: ''
-            });
+          const result = await fetchUserProfile(user.uid); 
+          if (result.success) {
+            console.log("User role from Firestore:", result.data.role);
+            setUserData(result.data);
+            setEditedData(result.data);
+            setError("");
           } else {
-            const result = await fetchUserProfile(user.uid);
-            if (result.success) {
-              setUserData(result.data);
-              setEditedData(result.data);
-              setError("");
-            } else {
-              setError(result.error);
-            }
+            setError(result.error);
           }
-        } else {
-          setError("Access Denied");
         }
         setLoading(false);
       });
-
+  
       return () => unsubscribe();
     };
-
+  
     checkUser();
   }, [navigate]);
-
+  
   const handleLogout = async () => {
     await logout();
-   
     setUserData(null);
     localStorage.removeItem("isLoggedIn");
     navigate("/login");
@@ -156,14 +117,10 @@ const Profile = () => {
     return <div className="loading">Loading...</div>;
   }
 
-  if (!userData && !loading) {
-    return <div className="error-message">{error}</div>;
-  }
-
   return (
     <div className="profile-container">
       <div className="profile-header-actions">
-        <h2>Trainer Profile</h2>
+        <h2>{userData?.role === 'Trainer' ? 'Trainer Profile' : 'Member Profile'}</h2>
         <button onClick={handleLogout} className="logout-button">Logout</button>
       </div>
 
@@ -173,14 +130,14 @@ const Profile = () => {
       <div className="profile-content">
         <div className="profile-top">
           <div className="profile-photo-container">
-            <img 
-              src={userData?.photoURL || defaultProfileImage} 
-              alt="Profile" 
+            <img
+              src={userData?.photoURL || defaultProfileImage}
+              alt={userData?.fullName}
               className="profile-photo"
               onError={(e) => {
                 console.error('Image failed to load');
                 e.target.src = defaultProfileImage;
-              }} 
+              }}
             />
             {isEditing && (
               <div className="photo-upload-overlay">

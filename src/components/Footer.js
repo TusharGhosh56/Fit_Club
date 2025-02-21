@@ -6,7 +6,7 @@ function Footer() {
     <footer className="footer">
       <div className="footer-content">
         <div className="footer-section">
-          <h3>FitLife <span className="highlight">Gym</span></h3>
+          <h3>FitClub <span className="highlight">Gym</span></h3>
           <p>Transform your life through fitness. Join our community and achieve your fitness goals today.</p>
           <div className="social-links">
             <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
@@ -46,15 +46,15 @@ function Footer() {
         <div className="footer-section">
           <h4>Contact Us</h4>
           <ul className="contact">
-            <li><i className="fas fa-map-marker-alt"></i> 123 Fitness Street, Gym City, GC 12345</li>
-            <li><i className="fas fa-phone"></i> (555) 123-4567</li>
-            <li><i className="fas fa-envelope"></i> info@fitlifegym.com</li>
+            <li><i className="fas fa-map-marker-alt"></i> 56th Street, old town, karnataka</li>
+            <li><i className="fas fa-phone"></i> 9876459011</li>
+            <li><i className="fas fa-envelope"></i> info@fitclubgym.com</li>
           </ul>
         </div>
       </div>
 
       <div className="footer-bottom">
-        <p>&copy; {new Date().getFullYear()} FitLife Gym. All rights reserved.</p>
+        <p>&copy; {new Date().getFullYear()} FitClub Gym. All rights reserved.</p>
         <div className="footer-bottom-links">
           <Link to="/privacy">Privacy Policy</Link>
           <Link to="/terms">Terms of Service</Link>
