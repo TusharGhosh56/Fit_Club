@@ -15,7 +15,6 @@
   letter-spacing: 1px;
 }
 
-
 .gym-name {
   font-size: 1.8rem;
   font-weight: bold;
@@ -35,7 +34,6 @@
     font-size: 1.5rem;
   }
 }
-
 
 .nav-links {
   display: flex;
@@ -63,7 +61,6 @@
   transform: translateY(-2px);
 }
 
-
 .auth-links {
   display: flex;
   gap: 1rem;
@@ -89,8 +86,6 @@
 .auth-links .signup-btn:hover {
   transform: translateY(-2px);
 }
-
-/* Add these styles to your existing Navbar.css */
 
 .profile-link {
   display: flex;
@@ -133,14 +128,28 @@
   box-shadow: 0 0 15px rgba(255, 87, 34, 0.3);
 }
 
-/* Update existing styles if needed */
-.nav-links {
-  display: flex;
-  align-items: center;
-  gap: 2rem;
+/* Sidebar styles */
+.sidebar-toggle {
+  display: none; /* Hide the toggle button by default */
+  font-size: 2rem;
+  color: #ff4d4d;
+  background: none;
+  border: none;
+  cursor: pointer;
 }
 
-/* Responsive adjustments */
+.nav-links.open {
+  display: flex; /* Show links when sidebar is open */
+  flex-direction: column;
+  position: absolute;
+  top: 60px; /* Adjust based on navbar height */
+  left: 0;
+  width: 100%;
+  background: #1a1a1a;
+  padding: 1rem;
+  z-index: 1000;
+}
+
 @media (max-width: 768px) {
   .navbar {
     padding: 1rem 2rem;
@@ -149,9 +158,11 @@
   }
 
   .nav-links {
-    gap: 1rem;
-    flex-wrap: wrap;
-    justify-content: center;
+    display: none; 
+  }
+
+  .sidebar-toggle {
+    display: block; 
   }
 
   .auth-links {
