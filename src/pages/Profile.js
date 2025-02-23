@@ -121,7 +121,6 @@ const Profile = () => {
     <div className="profile-container">
       <div className="profile-header-actions">
         <h2>{userData?.role === 'Trainer' ? 'Trainer Profile' : 'Member Profile'}</h2>
-        <button onClick={handleLogout} className="logout-button">Logout</button>
       </div>
 
       {error && <div className="error-message">{error}</div>}
@@ -211,12 +210,14 @@ const Profile = () => {
         </div>
       </div>
 
-      <div className="profile-edit">
+      <div className="profile-header-actions">
         {isEditing ? (
           <button className="save-button" onClick={handleSave}>Save Changes</button>
         ) : (
           <button className="edit-button" onClick={handleEdit}>Edit Profile</button>
         )}
+        <button onClick={handleLogout} className="logout-button">Logout</button>
+        
       </div>
     </div>
   );
