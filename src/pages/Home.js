@@ -5,36 +5,58 @@ function Home() {
   const navigate = useNavigate();
   return (
     <div className="home">
-      <div className="hero" >      
+      <div className="hero" >
         <h1>Transform Your <span className="highlight">Life</span></h1>
         <p>Join the ultimate fitness experience where strength meets community. Start your journey today.</p>
-        <button className="cta-button" onClick={()=>navigate('/login')}>Start Free Trial</button>
+        <video autoPlay loop muted playsInline src="https://video.wixstatic.com/video/d47472_58cce06729c54ccb935886c4b3647274/1080p/mp4/file.mp4"></video>
+        <button className="cta-button" onClick={() => navigate('/login')}>Start Free Trial</button>
       </div>
 
       <div className="features">
         <div className="feature1 ff">
           <div className='bg-grad'></div>
-          <div style={{zIndex: 1000, position: "relative"}}>
+          <div style={{ zIndex: 1000, position: "relative" }}>
 
             <h3>Expert <span className="highlight">Trainers</span></h3>
             <p>Our certified professionals create personalized programs to help you reach your goals faster.</p>
           </div>
         </div>
         <div className="feature2 ff">
-        <div className='bg-grad'></div>
-        <div style={{zIndex: 1000, position: "relative"}}>
-          <h3>Modern <span className="highlight">Equipment</span></h3>
-          <p>State-of-the-art facilities with the latest fitness technology and equipment.</p>
-        </div>
+          <div className='bg-grad'></div>
+          <div style={{ zIndex: 1000, position: "relative" }}>
+            <h3>Modern <span className="highlight">Equipment</span></h3>
+            <p>State-of-the-art facilities with the latest fitness technology and equipment.</p>
+          </div>
         </div>
         <div className="feature3 ff">
-        <div className='bg-grad'></div>
-        <div style={{zIndex: 1000, position: "relative"}}>
-          <h3>24/7 <span className="highlight">Access</span></h3>
-          <p>Train on your schedule with round-the-clock access to our facilities.</p>
-        </div>
+          <div className='bg-grad'></div>
+          <div style={{ zIndex: 1000, position: "relative" }}>
+            <h3>24/7 <span className="highlight">Access</span></h3>
+            <p>Train on your schedule with round-the-clock access to our facilities.</p>
+          </div>
         </div>
       </div>
+
+      <section className="classes">
+        <h2 className="section-title">Featured <span className="highlight">Classes</span></h2>
+        <div className="classes-grid">
+          <div className="class-card">
+            <h3>HIIT Training</h3>
+            <p>High-intensity interval training for maximum results</p>
+            <span className="time">Mon, Wed, Fri - 6:00 AM</span>
+          </div>
+          <div className="class-card">
+            <h3>Yoga Flow</h3>
+            <p>Find your balance and inner peace</p>
+            <span className="time">Tue, Thu - 7:00 AM</span>
+          </div>
+          <div className="class-card">
+            <h3>Strength & Conditioning</h3>
+            <p>Build muscle and improve endurance</p>
+            <span className="time">Mon, Wed, Fri - 5:00 PM</span>
+          </div>
+        </div>
+      </section>
 
       <section className="membership-plans">
         <h2 className="section-title">Membership <span className="highlight">Plans</span></h2>
@@ -59,27 +81,6 @@ function Home() {
               <li>Spa Access</li>
             </ul>
             <button className="cta-button">Choose Plan</button>
-          </div>
-        </div>
-      </section>
-
-      <section className="classes">
-        <h2 className="section-title">Featured <span className="highlight">Classes</span></h2>
-        <div className="classes-grid">
-          <div className="class-card">
-            <h3>HIIT Training</h3>
-            <p>High-intensity interval training for maximum results</p>
-            <span className="time">Mon, Wed, Fri - 6:00 AM</span>
-          </div>
-          <div className="class-card">
-            <h3>Yoga Flow</h3>
-            <p>Find your balance and inner peace</p>
-            <span className="time">Tue, Thu - 7:00 AM</span>
-          </div>
-          <div className="class-card">
-            <h3>Strength & Conditioning</h3>
-            <p>Build muscle and improve endurance</p>
-            <span className="time">Mon, Wed, Fri - 5:00 PM</span>
           </div>
         </div>
       </section>

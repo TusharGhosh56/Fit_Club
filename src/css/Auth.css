@@ -110,9 +110,7 @@
   gap: 1rem;
 }
 
-.signup-btn {
-  background: #ff4d4d !important;
-}
+
 
 @media (max-width: 480px) {
   .auth-card {

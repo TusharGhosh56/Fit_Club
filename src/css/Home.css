@@ -7,22 +7,53 @@
 .home .hero {
   text-align: center;
   padding: 8rem 2rem;
-  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('../assets/bicep1.png');
   background-size: cover;
   background-position: center;
-  min-height: 90vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   margin-top: -6rem;
+  position: relative;
+  overflow: hidden;
+  color: white;
+  z-index: 1;
 }
+
+
+.home .hero video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2; 
+}
+
+
+.home .hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(to top, rgba(207, 79, 83, 0.3), rgba(191, 108, 110, 0.3), rgba(180, 126, 127, 0.3), rgba(166, 140, 141, 0.3), rgba(153, 153, 153, 0.3), rgba(255, 255, 255, 0.1));
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  z-index: 0; 
+  opacity: 0.7; 
+}
+
 
 .hero h1 {
   font-size: clamp(2.5rem, 5vw, 4rem);
   margin-bottom: 1.5rem;
   text-transform: uppercase;
   letter-spacing: 2px;
+  z-index: 1;
 }
 
 .hero p {
@@ -30,6 +61,18 @@
   margin-bottom: 2rem;
   max-width: 600px;
   line-height: 1.6;
+  z-index: 1;
+}
+
+.video-container::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 11rem; 
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, #000000 100%);
+  pointer-events: none;
 }
 
 
@@ -39,32 +82,33 @@
   justify-content: center;
   gap: 2rem;
   padding: 6rem 2rem;
-  background: #1a1a1a;
+  background: #000000;
   height: 40rem;
+  background: linear-gradient(to top, #000000 0%, rgba(0, 0, 0, 0.7) 50%);
 }
 
 .feature1 {
   flex: 1 1;
-    min-width: 300px;
-    max-width: 400px;
-    text-align: center;
-    padding: 3rem 2rem;
-    background: url("/src/assets/home/wmremove-transformed.jpeg") center;
-    border-radius: 12px;
-    transition: transform 0.3sease;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    background-size: cover;
+  min-width: 300px;
+  max-width: 400px;
+  text-align: center;
+  padding: 3rem 2rem;
+  background: url("/src/assets/home/wmremove-transformed.jpeg") center;
+  border-radius: 12px;
+  transition: transform 0.3sease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background-size: cover;
 }
 
-.feature1 p{
+.feature1 p {
   margin-top: 2rem;
   z-index: 20 !important;
 }
 
-.feature1 h3{
+.feature1 h3 {
   margin-top: 13rem !important;
   z-index: 20 !important;
-  
+
 }
 
 .ff {
@@ -81,14 +125,11 @@
   z-index: 0;
   mix-blend-mode: multiply;
   background: hsla(0, 0%, 0%, 1);
-
-background: linear-gradient(90deg, hsla(0, 0%, 0%, 1) 0%, hsla(65, 7%, 70%, 1) 100%);
-
-background: -moz-linear-gradient(90deg, hsla(0, 0%, 0%, 1) 0%, hsla(65, 7%, 70%, 1) 100%);
-
-background: -webkit-linear-gradient(90deg, hsla(0, 0%, 0%, 1) 0%, hsla(65, 7%, 70%, 1) 100%);
-
-filter: progid: DXImageTransform.Microsoft.gradient( startColorstr="#000000", endColorstr="#B6B7AC", GradientType=1 );}
+  background: linear-gradient(90deg, hsla(0, 0%, 0%, 1) 0%, hsla(65, 7%, 70%, 1) 100%);
+  background: -moz-linear-gradient(90deg, hsla(0, 0%, 0%, 1) 0%, hsla(65, 7%, 70%, 1) 100%);
+  background: -webkit-linear-gradient(90deg, hsla(0, 0%, 0%, 1) 0%, hsla(65, 7%, 70%, 1) 100%);
+  filter: progid: DXImageTransform.Microsoft.gradient(startColorstr="#000000", endColorstr="#B6B7AC", GradientType=1);
+}
 
 .feature2 {
   flex: 1;
@@ -103,13 +144,13 @@ filter: progid: DXImageTransform.Microsoft.gradient( startColorstr="#000000", en
   background-size: cover;
 }
 
-.feature2 p{
+.feature2 p {
   margin-top: 2rem;
 }
 
-.feature2 h3{
+.feature2 h3 {
   margin-top: 13rem !important;
-  
+
 }
 
 .feature3 {
@@ -123,16 +164,15 @@ filter: progid: DXImageTransform.Microsoft.gradient( startColorstr="#000000", en
   transition: transform 0.3s ease;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   background-size: cover;
-  
 }
 
-.feature3 p{
+.feature3 p {
   margin-top: 2rem;
 }
 
-.feature3 h3{
+.feature3 h3 {
   margin-top: 13rem !important;
-  
+
 }
 
 
@@ -145,10 +185,10 @@ filter: progid: DXImageTransform.Microsoft.gradient( startColorstr="#000000", en
   margin-bottom: 1.5rem;
 }
 
-/* Membership Plans Section */
+
 .membership-plans {
   padding: 6rem 2rem;
-  background: #121212;
+  background: #000000;
 }
 
 .plans-grid {
@@ -219,7 +259,7 @@ filter: progid: DXImageTransform.Microsoft.gradient( startColorstr="#000000", en
 /* Classes Section */
 .classes {
   padding: 6rem 2rem;
-  background: #1a1a1a;
+  background: #000000;
 }
 
 .classes-grid {
@@ -312,7 +352,9 @@ filter: progid: DXImageTransform.Microsoft.gradient( startColorstr="#000000", en
     padding: 6rem 1rem;
   }
 
-  .feature, .plan, .class-card {
+  .feature,
+  .plan,
+  .class-card {
     min-width: 100%;
   }
 
