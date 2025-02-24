@@ -12,17 +12,27 @@ function Home() {
       </div>
 
       <div className="features">
-        <div className="feature">
-          <h3>Expert <span className="highlight">Trainers</span></h3>
-          <p>Our certified professionals create personalized programs to help you reach your goals faster.</p>
+        <div className="feature1 ff">
+          <div className='bg-grad'></div>
+          <div style={{zIndex: 1000, position: "relative"}}>
+
+            <h3>Expert <span className="highlight">Trainers</span></h3>
+            <p>Our certified professionals create personalized programs to help you reach your goals faster.</p>
+          </div>
         </div>
-        <div className="feature">
+        <div className="feature2 ff">
+        <div className='bg-grad'></div>
+        <div style={{zIndex: 1000, position: "relative"}}>
           <h3>Modern <span className="highlight">Equipment</span></h3>
           <p>State-of-the-art facilities with the latest fitness technology and equipment.</p>
         </div>
-        <div className="feature">
+        </div>
+        <div className="feature3 ff">
+        <div className='bg-grad'></div>
+        <div style={{zIndex: 1000, position: "relative"}}>
           <h3>24/7 <span className="highlight">Access</span></h3>
           <p>Train on your schedule with round-the-clock access to our facilities.</p>
+        </div>
         </div>
       </div>
 
