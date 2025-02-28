@@ -4,7 +4,7 @@ import { auth } from '../firebase/config';
 import { fetchPosts, createPost, deletePost, updatePost, saveReply } from '../services/blogService';
 import defaultProfileImage from "../assets/profile/default_profile_image.jpg";
 import '../css/Blog.css';
-
+import { motion } from "framer-motion";
 
 function Blog() {
   const [posts, setPosts] = useState([]);
@@ -160,10 +160,15 @@ function Blog() {
 
   return (
     <div className="blog-container">
-      <div className="blog-header">
+      <motion.div 
+        className="blog-header"
+        initial={{ opacity: 0, y: -20 }} 
+        whileInView={{ opacity: 1, y: 0 }} 
+        transition={{ duration: 0.5 }}
+      >
         <h2>Community Blog</h2>
         {error && <div className="error-message">{error}</div>}
-      </div>
+      </motion.div>
       {isLoading && posts.length === 0 ? (
         <div className="loading">Loading...</div>
       ) : (
@@ -190,7 +195,13 @@ function Blog() {
       )}
       <div className="posts-container">
         {posts.map((post) => (
-          <div key={post.id} className="post-card">
+          <motion.div 
+            key={post.id} 
+            className="post-card"
+            initial={{ opacity: 0, y: 20 }} 
+            whileInView={{ opacity: 1, y: 0 }} 
+            transition={{ duration: 0.5 }}
+          >
             <div className="post-header">
               <div className="author-info">
                 <div className="author-photo-container">
@@ -311,7 +322,7 @@ function Blog() {
                 />
               </div>
             )}
-          </div>
+          </motion.div>
         ))}
       </div>
     </div>

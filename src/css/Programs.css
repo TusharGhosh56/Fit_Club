@@ -1,87 +1,57 @@
 .equipment {
-  padding: 3rem 4rem;
-  background-color: #000000;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
 }
 
 .section-title {
-  text-align: center;
   font-size: 2.5rem;
-  margin-bottom: 3rem;
-  color: #fdfdfd;
-  text-transform: uppercase;
+  font-weight: bold;
+  margin-bottom: 2rem;
 }
 
 .highlight {
-  color: #ff4d4d;
+  color: #ff5733;
 }
 
-.equipment-grid,
-.programs-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
-  margin-bottom: 4rem;
-}
-
-.equipment-card,
-.program-card {
-  background: white;
-  border-radius: 10px;
-  padding: 2rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
-}
-
-.equipment-card:hover,
-.program-card:hover {
-  transform: translateY(-5px);
-}
-
-.equipment-card h3,
-.program-card h3 {
-  color: #ff4d4d;
-  font-size: 1.5rem;
-  margin-bottom: 1.5rem;
-  text-transform: uppercase;
-  border-bottom: 2px solid #ff4d4d;
-  padding-bottom: 0.5rem;
-}
-
-.equipment-card ul,
-.program-card ul {
-  list-style: none;
-  padding: 0;
-}
-
-.equipment-card li,
-.program-card li {
-  padding: 0.8rem 0;
-  color: #555;
-  border-bottom: 1px solid #eee;
+.equipment-section {
   display: flex;
   align-items: center;
+  gap: 4rem;
+  margin-bottom: 3rem;
 }
 
-.equipment-card li:before,
-.program-card li:before {
-  content: "•";
-  color: #ff4d4d;
-  font-weight: bold;
-  margin-right: 0.8rem;
+.row {
+  flex-direction: row;
+  height: 65vh;
 }
 
-@media (max-width: 768px) {
-  .equipment {
-    padding: 2rem;
-  }
+.row-reverse {
+  flex-direction: row-reverse;
+}
 
-  .section-title {
-    font-size: 2rem;
-    margin-bottom: 2rem;
-  }
+.text-content {
+  flex: 1;
+  text-align: left;
+}
 
-  .equipment-grid,
-  .programs-grid {
-    grid-template-columns: 1fr;
-  }
+.text-content h3 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  color: #ffffff;
+}
+
+.text-content p {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #ffffff;
+}
+
+.equipment-image {
+  flex: 1;
+  max-width: 50%;
+  border-radius: 10px;
+  object-fit: cover;
 }

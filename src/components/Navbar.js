@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { auth } from '../firebase/config'; 
 import { onAuthStateChanged } from 'firebase/auth';
 import '../css/Navbar.css';
+import logo from "../assets/logo/logo1.png"
 
 function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -48,7 +49,7 @@ function Navbar() {
   return (
     <nav className="navbar">
       <div className="nav-brand">
-        <button className='gym-name' onClick={() => navigate('/')}>FitClub</button>
+        <button className='gym-name' onClick={() => navigate('/')}><img src={logo} alt="logo" className='navbar-logo'></img></button>
       </div>
       <button className="sidebar-toggle" onClick={toggleSidebar}>
         ☰ {/* Hamburger icon */}

@@ -3,25 +3,33 @@
   background: #121212;
 }
 
-/* Hero Section */
+
 .home .hero {
   text-align: center;
   padding: 8rem 2rem;
-  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('../assets/bicep1.png');
   background-size: cover;
   background-position: center;
-  min-height: 90vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin-top: -6rem;
+  position: relative;
+  overflow: hidden;
+  color: white;
+  z-index: 1;
 }
+
+
+
 
 .hero h1 {
   font-size: clamp(2.5rem, 5vw, 4rem);
   margin-bottom: 1.5rem;
   text-transform: uppercase;
   letter-spacing: 2px;
+  z-index: 1;
 }
 
 .hero p {
@@ -29,29 +37,150 @@
   margin-bottom: 2rem;
   max-width: 600px;
   line-height: 1.6;
+  z-index: 1;
 }
 
-/* Features Section */
+.video-container::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 11rem; 
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, #000000 100%);
+  pointer-events: none;
+}
+
+.video-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 0; 
+}
+
+.video-container video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: auto;
+  min-height: 100%;
+  min-width: 100%;
+  object-fit: cover;
+  transform: translate(-50%, -50%);
+}
+
+@keyframes fade {
+  0% { opacity: 1; }
+  16.67% { opacity: 1; }
+  20% { opacity: 0; }
+  33.33% { opacity: 0; }
+  36.67% { opacity: 1; }
+  100% { opacity: 1; }
+}
+
 .features {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 2rem;
   padding: 6rem 2rem;
-  background: #1a1a1a;
+  background: #000000;
+  height: 40rem;
+  background: linear-gradient(to top, #000000 0%, rgba(0, 0, 0, 0.7) 50%);
 }
 
-.feature {
+.feature1 {
+  flex: 1 1;
+  min-width: 300px;
+  max-width: 400px;
+  text-align: center;
+  padding: 3rem 2rem;
+  background: url("/src/assets/home/wmremove-transformed.jpeg") center;
+  border-radius: 12px;
+  transition: transform 0.3sease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background-size: cover;
+}
+
+.feature1 p {
+  margin-top: 2rem;
+  z-index: 20 !important;
+}
+
+.feature1 h3 {
+  margin-top: 13rem !important;
+  z-index: 20 !important;
+
+}
+
+.ff {
+  position: relative;
+  overflow: hidden;
+}
+
+.bg-grad {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  mix-blend-mode: multiply;
+  background: hsla(0, 0%, 0%, 1);
+  background: linear-gradient(90deg, hsla(0, 0%, 0%, 1) 0%, hsla(65, 7%, 70%, 1) 100%);
+  background: -moz-linear-gradient(90deg, hsla(0, 0%, 0%, 1) 0%, hsla(65, 7%, 70%, 1) 100%);
+  background: -webkit-linear-gradient(90deg, hsla(0, 0%, 0%, 1) 0%, hsla(65, 7%, 70%, 1) 100%);
+  filter: progid: DXImageTransform.Microsoft.gradient(startColorstr="#000000", endColorstr="#B6B7AC", GradientType=1);
+}
+
+.feature2 {
   flex: 1;
   min-width: 300px;
   max-width: 400px;
   text-align: center;
   padding: 3rem 2rem;
-  background: #242424;
+  background: url("/src/assets/home/samuel-girven-fqMu99l8sqo-unsplash.jpg") center;
   border-radius: 12px;
   transition: transform 0.3s ease;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background-size: cover;
 }
+
+.feature2 p {
+  margin-top: 2rem;
+}
+
+.feature2 h3 {
+  margin-top: 13rem !important;
+
+}
+
+.feature3 {
+  flex: 1;
+  min-width: 300px;
+  max-width: 400px;
+  text-align: center;
+  padding: 3rem 2rem;
+  background: url("/src/assets/home/sushil-ghimire-5UbIqV58CW8-unsplash.jpg") center;
+  border-radius: 12px;
+  transition: transform 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background-size: cover;
+}
+
+.feature3 p {
+  margin-top: 2rem;
+}
+
+.feature3 h3 {
+  margin-top: 13rem !important;
+
+}
+
 
 .feature:hover {
   transform: translateY(-10px);
@@ -62,10 +191,10 @@
   margin-bottom: 1.5rem;
 }
 
-/* Membership Plans Section */
+
 .membership-plans {
   padding: 6rem 2rem;
-  background: #121212;
+  background: #000000;
 }
 
 .plans-grid {
@@ -136,7 +265,7 @@
 /* Classes Section */
 .classes {
   padding: 6rem 2rem;
-  background: #1a1a1a;
+  background: #000000;
 }
 
 .classes-grid {
@@ -229,7 +358,9 @@
     padding: 6rem 1rem;
   }
 
-  .feature, .plan, .class-card {
+  .feature,
+  .plan,
+  .class-card {
     min-width: 100%;
   }
 
