@@ -1,15 +1,59 @@
 import '../css/Home.css';
 import { useNavigate } from 'react-router-dom';
 import { motion } from "framer-motion";
+import hero1 from "../assets/home/hero/hero1.mp4";
+import hero2 from "../assets/home/hero/hero2.mp4";
+import hero3 from "../assets/home/hero/hero3.mp4";
+import hero4 from "../assets/home/hero/hero4.mp4";
+import hero5 from "../assets/home/hero/hero5.mp4";
+import { useEffect, useState, useMemo } from 'react';
 
 function Home() {
   const navigate = useNavigate();
+  const videos = useMemo(() => [hero1, hero2, hero3, hero4, hero5], []);
+  const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+
+
+  useEffect(() => {
+    const videoElement = document.getElementById('hero-video');
+
+    const loadAndPlayVideo = () => {
+      setIsLoading(true);
+      videoElement.src = videos[currentVideoIndex];
+      videoElement.load();
+
+      videoElement.oncanplaythrough = () => {
+        videoElement.play().catch((error) => {
+          console.error("Error playing video:", error);
+        });
+        setIsLoading(false);
+      };
+    };
+
+    loadAndPlayVideo();
+
+    const handleVideoEnd = () => {
+      setCurrentVideoIndex((prevIndex) => (prevIndex + 1) % videos.length);
+    };
+
+    videoElement.addEventListener('ended', handleVideoEnd);
+
+    return () => {
+      videoElement.removeEventListener('ended', handleVideoEnd);
+      videoElement.oncanplaythrough = null;
+    };
+  }, [currentVideoIndex, videos]);
+
   return (
     <motion.div className="home" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
+      <div className="video-container">
+        <video id="hero-video" autoPlay muted />
+      </div>
+      {isLoading && <div className="loading-message">Loading video...</div>}
       <motion.div className="hero" initial={{ y: -50 }} animate={{ y: 0 }} transition={{ duration: 0.5 }}>
         <h1>Transform Your <span className="highlight">Life</span></h1>
         <p>Join the ultimate fitness experience where strength meets community. Start your journey today.</p>
-        <video autoPlay loop muted playsInline src="https://video.wixstatic.com/video/d47472_58cce06729c54ccb935886c4b3647274/1080p/mp4/file.mp4"></video>
         <motion.button 
           className="cta-button"
           whileHover={{ scale: 1.1 }}

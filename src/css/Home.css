@@ -22,30 +22,6 @@
 }
 
 
-.home .hero video {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: -2; 
-}
-
-
-.home .hero::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: linear-gradient(to top, rgba(207, 79, 83, 0.3), rgba(191, 108, 110, 0.3), rgba(180, 126, 127, 0.3), rgba(166, 140, 141, 0.3), rgba(153, 153, 153, 0.3), rgba(255, 255, 255, 0.1));
-  mix-blend-mode: overlay;
-  pointer-events: none;
-  z-index: 0; 
-  opacity: 0.7; 
-}
 
 
 .hero h1 {
@@ -75,6 +51,37 @@
   pointer-events: none;
 }
 
+.video-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 0; /* Behind the hero content */
+}
+
+.video-container video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: auto;
+  min-height: 100%;
+  min-width: 100%;
+  object-fit: cover;
+  transform: translate(-50%, -50%);
+  animation: fade 30s infinite; /* Smooth transition effect */
+}
+
+@keyframes fade {
+  0% { opacity: 1; }
+  16.67% { opacity: 1; }
+  20% { opacity: 0; }
+  33.33% { opacity: 0; }
+  36.67% { opacity: 1; }
+  100% { opacity: 1; }
+}
 
 .features {
   display: flex;
