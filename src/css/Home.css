@@ -58,7 +58,7 @@
   width: 100%;
   height: 100%;
   overflow: hidden;
-  z-index: 0; /* Behind the hero content */
+  z-index: 0; 
 }
 
 .video-container video {
@@ -71,7 +71,6 @@
   min-width: 100%;
   object-fit: cover;
   transform: translate(-50%, -50%);
-  animation: fade 30s infinite; /* Smooth transition effect */
 }
 
 @keyframes fade {

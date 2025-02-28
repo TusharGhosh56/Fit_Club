@@ -12,14 +12,13 @@ function Home() {
   const navigate = useNavigate();
   const videos = useMemo(() => [hero1, hero2, hero3, hero4, hero5], []);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
-
+  const [isFading, setIsFading] = useState(false);
 
   useEffect(() => {
     const videoElement = document.getElementById('hero-video');
 
     const loadAndPlayVideo = () => {
-      setIsLoading(true);
+      console.log(`Loading video: ${videos[currentVideoIndex]}`);
       videoElement.src = videos[currentVideoIndex];
       videoElement.load();
 
@@ -27,14 +26,17 @@ function Home() {
         videoElement.play().catch((error) => {
           console.error("Error playing video:", error);
         });
-        setIsLoading(false);
       };
     };
 
     loadAndPlayVideo();
 
     const handleVideoEnd = () => {
-      setCurrentVideoIndex((prevIndex) => (prevIndex + 1) % videos.length);
+      setIsFading(true);
+      setTimeout(() => {
+        setCurrentVideoIndex((prevIndex) => (prevIndex + 1) % videos.length);
+        setIsFading(false);
+      }, 1000);
     };
 
     videoElement.addEventListener('ended', handleVideoEnd);
@@ -48,9 +50,15 @@ function Home() {
   return (
     <motion.div className="home" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
       <div className="video-container">
-        <video id="hero-video" autoPlay muted />
+        <motion.video
+          id="hero-video"
+          autoPlay
+          muted
+          initial={{ opacity: 1 }}
+          animate={{ opacity: isFading ? 0 : 1 }}
+          transition={{ duration: 1 }}
+        />
       </div>
-      {isLoading && <div className="loading-message">Loading video...</div>}
       <motion.div className="hero" initial={{ y: -50 }} animate={{ y: 0 }} transition={{ duration: 0.5 }}>
         <h1>Transform Your <span className="highlight">Life</span></h1>
         <p>Join the ultimate fitness experience where strength meets community. Start your journey today.</p>
