@@ -23,7 +23,7 @@
     transform: translateX(-50%);
     width: 80px;
     height: 3px;
-    background: linear-gradient(90deg, #FF5722, #ff8a65);
+    background:#FF5722;
 }
 
 .profile-content {

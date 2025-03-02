@@ -12,6 +12,9 @@
   color: #FF5722;
   text-transform: uppercase;
   position: relative;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
 }
 
 .about h2::after {
@@ -32,7 +35,11 @@
   line-height: 1.8;
 }
 
-.mission, .facilities, .team-section, .testimonials, .cta {
+.mission,
+.facilities,
+.team-section,
+.testimonials,
+.cta {
   margin-bottom: 4rem;
   background: linear-gradient(145deg, #1a1a1a, #242424);
   padding: 3rem;
@@ -43,7 +50,8 @@
   border: 1px solid rgba(255, 87, 34, 0.1);
 }
 
-.mission::before, .facilities::before {
+.mission::before,
+.facilities::before {
   content: '';
   position: absolute;
   top: 0;
@@ -53,7 +61,8 @@
   background: linear-gradient(90deg, #FF5722, #ff8a65);
 }
 
-.mission h3, .facilities h3 {
+.mission h3,
+.facilities h3 {
   font-size: 2rem;
   margin-bottom: 2rem;
   color: #FF5722;
@@ -61,7 +70,8 @@
   padding-bottom: 1rem;
 }
 
-.mission h3::after, .facilities h3::after {
+.mission h3::after,
+.facilities h3::after {
   content: '';
   position: absolute;
   bottom: 0;
@@ -210,26 +220,36 @@
   box-shadow: 0 6px 12px rgba(255, 87, 34, 0.4);
 }
 
-/* Responsive Design */
+
 @media (max-width: 768px) {
   .team-grid {
-      flex-direction: column;
-      align-items: center;
+    flex-direction: column;
+    align-items: center;
   }
 
   .team-member {
-      max-width: 90%;
+    max-width: 90%;
   }
 
   .cta {
-      padding: 2rem 1rem;
+    padding: 2rem 1rem;
   }
 
-  .mission, .facilities {
+  .mission,
+  .facilities {
     padding: 2rem;
   }
-  
+
   .facilities ul {
     grid-template-columns: 1fr;
   }
+}
+
+.title-white {
+  color: #e0e0e0;
+}
+
+.title-orange{
+  color: #FF5722;
+  margin-top: 2rem;
 }

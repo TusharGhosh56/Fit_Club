@@ -403,6 +403,22 @@
 .blog-header {
     text-align: center;
     margin-bottom: 3rem;
+    display: flex;
+    justify-content: center;
+    margin-top: 3rem;
+    position: relative;
+}
+
+.blog-header::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 4px;
+    background: #ff5733;
+    transition: width 0.3s ease;
 }
 
 .blog-header h2 {
@@ -458,4 +474,14 @@
     outline: none;
     border-color: #FF5722;
     box-shadow: 0 0 5px rgba(255, 87, 34, 0.5);
+}
+
+.title-white{
+    color: white;
+    font-size: 2.8rem;
+    position: relative;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 600;
+    margin-top: 2rem;
 }
