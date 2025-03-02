@@ -52,7 +52,7 @@ function Navbar() {
         <button className='gym-name' onClick={() => navigate('/')}><img src={logo} alt="logo" className='navbar-logo'></img></button>
       </div>
       <button className="sidebar-toggle" onClick={toggleSidebar}>
-        ☰ {/* Hamburger icon */}
+        ☰ 
       </button>
       <ul className={`nav-links ${isSidebarOpen ? 'open' : ''}`} ref={sidebarRef}>
         <li><Link to="/" onClick={closeSidebar}>Home</Link></li>

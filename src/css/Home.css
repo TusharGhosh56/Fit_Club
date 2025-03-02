@@ -90,7 +90,8 @@
   padding: 6rem 2rem;
   background: #000000;
   height: 40rem;
-  background: linear-gradient(to top, #000000 0%, rgba(0, 0, 0, 0.7) 50%);
+  background: linear-gradient(to top, #000000 0%, rgba(0, 0, 0) 50%);
+  margin-top: -1rem;
 }
 
 .feature1 {
