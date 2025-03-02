@@ -120,7 +120,7 @@ const Profile = () => {
   return (
     <div className="profile-container">
       <div className="profile-header-actions">
-        <h2>{userData?.role === 'Trainer' ? 'Trainer Profile' : 'Member Profile'}</h2>
+        <h2><p className="highlight">{userData?.role === 'Trainer' ? 'Trainer' : 'Member'}</p>profile</h2>
       </div>
 
       {error && <div className="error-message">{error}</div>}

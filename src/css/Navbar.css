@@ -134,10 +134,10 @@
 }
 
 .nav-links.open {
-  display: flex; /* Show links when sidebar is open */
+  display: flex; 
   flex-direction: column;
   position: absolute;
-  top: 60px; /* Adjust based on navbar height */
+  top: 60px; 
   left: 0;
   width: 100%;
   background: #1a1a1a;
@@ -150,6 +150,7 @@
     padding: 1rem 2rem;
     flex-direction: column;
     gap: 1rem;
+    width: 115vw;
   }
 
   .nav-links {

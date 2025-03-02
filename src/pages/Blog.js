@@ -166,7 +166,7 @@ function Blog() {
         whileInView={{ opacity: 1, y: 0 }} 
         transition={{ duration: 0.5 }}
       >
-        <h2>Community Blog</h2>
+        <h2>Community </h2><div className='title-white'>Blog</div> 
         {error && <div className="error-message">{error}</div>}
       </motion.div>
       {isLoading && posts.length === 0 ? (

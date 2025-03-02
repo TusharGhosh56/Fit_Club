@@ -15,7 +15,7 @@ function About() {
         whileInView={{ opacity: 1, y: 0 }} 
         transition={{ duration: 0.5 }}
       >
-        About FitClub Fitness
+        <div className='title-white'>About</div><div className='title-orange'>FitClub</div><div className='title-white'>Fitness</div>
       </motion.h2>
       <div className="about-content">
        
@@ -32,7 +32,6 @@ function About() {
           </p>
         </motion.section>
 
-        {/* Facilities and Services Section */}
         <motion.section 
           className="facilities"
           initial={{ opacity: 0, x: -100 }} 
