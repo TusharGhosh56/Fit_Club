@@ -1,0 +1,235 @@
+.payment-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.payment-modal {
+  background: #fff;
+  border-radius: 15px;
+  width: 90%;
+  max-width: 500px;
+  position: relative;
+  color: #333;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.close-button {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  border: none;
+  font-size: 1.5rem;
+  padding: 0.5rem;
+  line-height: 1;
+  z-index: 1;
+  background: none;
+  color: rgb(0, 0, 0);
+  cursor: pointer;
+
+}
+
+.payment-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid #eee;
+  text-align: center;
+}
+
+.payment-header h2 {
+  margin: 0;
+  color: #333;
+  font-size: 1.5rem;
+}
+
+.amount-display {
+  margin-top: 1rem;
+  font-size: 1.1rem;
+}
+
+.amount-display .price {
+  font-weight: bold;
+  color: var(--orange);
+  margin-left: 0.5rem;
+}
+
+.payment-methods {
+  padding: 1.5rem;
+}
+
+.method-selector {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.method-button {
+  background: #f5f5f5;
+  border: 2px solid #eee;
+  border-radius: 10px;
+  padding: 1rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.method-button.active {
+  background: #fff;
+  border-color: var(--orange);
+  color: var(--orange);
+}
+
+.method-button i {
+  font-size: 1.5rem;
+}
+
+.payment-form {
+  margin-top: 1.5rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #666;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.8rem;
+  border: 2px solid #eee;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.form-group input:focus {
+  border-color: var(--orange);
+  outline: none;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.pay-button {
+  width: 100%;
+  padding: 1rem;
+  background: var(--orange);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 1.5rem;
+  transition: background 0.3s ease;
+  background: #FF5722;
+}
+
+
+.payment-footer {
+  padding: 1rem;
+  text-align: center;
+  border-top: 1px solid #eee;
+}
+
+.secure-badge {
+  color: #666;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.secure-badge i {
+  color: #28a745;
+}
+
+.upi-inputs {
+  margin-bottom: 1.5rem;
+}
+
+.upi-apps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.upi-app-button {
+  background: #f8f9fa;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.upi-app-button img {
+  height: 30px;
+  width: auto;
+}
+
+.upi-app-button:hover {
+  border-color: var(--orange);
+}
+
+.bank-grid,
+.wallet-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.bank-button,
+.wallet-button {
+  background: #f8f9fa;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.bank-button:hover,
+.wallet-button:hover {
+  border-color: var(--orange);
+  color: var(--orange);
+}
+
+@media (max-width: 480px) {
+  .method-selector {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .upi-apps {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

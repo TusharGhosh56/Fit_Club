@@ -1,18 +1,20 @@
 import '../css/Home.css';
 import { useNavigate } from 'react-router-dom';
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import hero1 from "../assets/home/hero/hero1.mp4";
 import hero2 from "../assets/home/hero/hero2.mp4";
 import hero3 from "../assets/home/hero/hero3.mp4";
 import hero4 from "../assets/home/hero/hero4.mp4";
 import hero5 from "../assets/home/hero/hero5.mp4";
 import { useEffect, useState, useMemo } from 'react';
+import PaymentPage from '../components/PaymentPage';
 
 function Home() {
   const navigate = useNavigate();
   const videos = useMemo(() => [hero1, hero2, hero3, hero4, hero5], []);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [isFading, setIsFading] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState(null);
 
   useEffect(() => {
     const videoElement = document.getElementById('hero-video');
@@ -160,8 +162,8 @@ function Home() {
         </motion.h2>
         <div className="plans-grid">
           {[
-            { name: "Basic", price: "$29.99/mo", features: ["Full Gym Access", "Locker Room Access", "Basic Equipment"] },
-            { name: "Premium", price: "$49.99/mo", features: ["Full Gym Access", "Group Classes", "Personal Trainer (2x/month)", "Spa Access"] }
+            { name: "Basic", price: "₹1200/mo", features: ["Full Gym Access", "Locker Room Access", "Basic Equipment"] },
+            { name: "Premium", price: "₹1500/mo", features: ["Full Gym Access", "Group Classes", "Personal Trainer (2x/month)", "Spa Access"] }
           ].map((plan, index) => (
             <motion.div 
               className={`plan ${plan.name === "Premium" ? "featured" : ""}`}
@@ -179,6 +181,7 @@ function Home() {
                 className="cta-button"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
+                onClick={() => setSelectedPlan(plan.name.toLowerCase())}
               >
                 Choose Plan
               </motion.button>
@@ -186,6 +189,14 @@ function Home() {
           ))}
         </div>
       </section>
+      <AnimatePresence>
+        {selectedPlan && (
+          <PaymentPage 
+            plan={selectedPlan} 
+            onClose={() => setSelectedPlan(null)} 
+          />
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }
