@@ -1,24 +1,97 @@
 import '../css/Home.css';
 import { useNavigate } from 'react-router-dom';
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
+import React, { useEffect, useRef, useState } from 'react';
+import introVideo from '../assets/intro.mp4';
 
 function Home() {
   const navigate = useNavigate();
+  const videoRef = useRef(null);
+  const [isVideoLoaded, setIsVideoLoaded] = useState(false);
+  const shouldReduceMotion = useReducedMotion();
+
+  useEffect(() => {
+    if (videoRef.current) {
+      const video = videoRef.current;
+      
+      const handleVideoLoad = () => {
+        setIsVideoLoaded(true);
+        video.play().catch(error => {
+          console.log("Video autoplay failed:", error);
+        });
+      };
+
+      video.addEventListener('loadeddata', handleVideoLoad);
+      
+      // Ensure smooth playback
+      video.addEventListener('pause', () => {
+        video.play().catch(() => {});
+      });
+
+      return () => {
+        video.removeEventListener('loadeddata', handleVideoLoad);
+      };
+    }
+  }, []);
+
+  const contentVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { opacity: 1, y: 0 }
+  };
+
   return (
-    <motion.div className="home" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
-      <motion.div className="hero" initial={{ y: -50 }} animate={{ y: 0 }} transition={{ duration: 0.5 }}>
-        <h1>Transform Your <span className="highlight">Life</span></h1>
-        <p>Join the ultimate fitness experience where strength meets community. Start your journey today.</p>
-        <video autoPlay loop muted playsInline src="https://video.wixstatic.com/video/d47472_58cce06729c54ccb935886c4b3647274/1080p/mp4/file.mp4"></video>
-        <motion.button 
-          className="cta-button"
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          onClick={() => navigate('/login')}
+    <motion.div 
+      className="home" 
+      initial={{ opacity: 0 }} 
+      animate={{ opacity: 1 }} 
+      transition={{ duration: 0.7 }}
+    >
+      <div className="hero">
+        <div className="video-overlay"></div>
+        <video
+          ref={videoRef}
+          className="hero-video"
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="auto"
         >
-          Start Free Trial
-        </motion.button>
-      </motion.div>
+          <source src={introVideo} type="video/mp4" />
+        </video>
+        
+        {isVideoLoaded && (
+          <motion.div 
+            className="hero-content"
+            initial="hidden"
+            animate="visible"
+            transition={{ staggerChildren: 0.2 }}
+          >
+            <motion.h1 
+              variants={contentVariants}
+              transition={{ duration: 0.8 }}
+            >
+              Transform Your <span className="highlight">Life</span>
+            </motion.h1>
+            <motion.p
+              variants={contentVariants}
+              transition={{ duration: 0.8 }}
+            >
+              Join the ultimate fitness experience where strength meets community. Start your journey today.
+            </motion.p>
+            <motion.button 
+              className="cta-button"
+              variants={contentVariants}
+              transition={{ duration: 0.8 }}
+              whileHover={{ scale: shouldReduceMotion ? 1 : 1.1 }}
+              whileTap={{ scale: shouldReduceMotion ? 1 : 0.9 }}
+              onClick={() => navigate('/login')}
+            >
+              Start Free Trial
+            </motion.button>
+          </motion.div>
+        )}
+      </div>
 
       <div className="features">
         <motion.div 
