@@ -29,7 +29,21 @@ export const fetchPosts = async () => {
       
       const repliesQuery = query(collection(db, 'replies'), where('postId', '==', docSnapshot.id));
       const repliesSnapshot = await getDocs(repliesQuery);
-      const replies = repliesSnapshot.docs.map(replyDoc => replyDoc.data().replyText);
+      const replies = await Promise.all(repliesSnapshot.docs.map(async (replyDoc) => {
+        const replyData = replyDoc.data();
+        const replyUserRef = doc(db, 'users', replyData.userId);
+        const replyUserSnap = await getDoc(replyUserRef);
+        const replyUserData = replyUserSnap.exists() ? replyUserSnap.data() : {};
+        
+        return {
+          id: replyDoc.id,
+          text: replyData.replyText,
+          createdAt: replyData.createdAt?.toDate?.().toLocaleString() || replyData.createdAt.toLocaleString(),
+          userId: replyData.userId,
+          userName: replyData.userName || 'Anonymous',
+          userPhoto: replyUserData.photoURL || null
+        };
+      }));
 
       return {
         id: docSnapshot.id,
@@ -137,11 +151,24 @@ export const updatePost = async (postId, newText) => {
 
 export const saveReply = async (postId, replyText) => {
   try {
+    if (!auth.currentUser) {
+      return {
+        success: false,
+        error: 'User must be logged in to reply'
+      };
+    }
+
+    const userRef = doc(db, 'users', auth.currentUser.uid);
+    const userSnap = await getDoc(userRef);
+    const userData = userSnap.exists() ? userSnap.data() : {};
+
     const replyData = {
       postId: postId,
       replyText: replyText,
-      createdAt: new Date(),
+      createdAt: serverTimestamp(),
       userId: auth.currentUser.uid,
+      userName: auth.currentUser.displayName || 'Anonymous',
+      userPhoto: userData.photoURL || null
     };
 
     await addDoc(collection(db, 'replies'), replyData);
