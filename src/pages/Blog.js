@@ -139,22 +139,15 @@ function Blog() {
   };
 
   const handleReplySubmit = async () => {
-    if (replyPostId) {
-      const updatedPosts = posts.map(post => {
-        if (post.id === replyPostId) {
-          post.replies = post.replies || [];
-          post.replies.push(replyText);
-        }
-        return post;
-      });
-      setPosts(updatedPosts);
+    if (replyPostId && replyText.trim()) {
+      const result = await saveReply(replyPostId, replyText.trim());
+      if (result.success) {
+        await loadPosts(); // Reload posts to get updated replies
+      } else {
+        setError(result.error || 'Failed to save reply');
+      }
       setReplyText('');
       setReplyPostId(null);
-
-      const result = await saveReply(replyPostId, replyText);
-      if (!result.success) {
-        console.error('Error saving reply:', result.error);
-      }
     }
   };
 
@@ -203,123 +196,77 @@ function Blog() {
             transition={{ duration: 0.5 }}
           >
             <div className="post-header">
-              <div className="author-info">
-                <div className="author-photo-container">
-                  <img
-                    src={post.authorPhoto || defaultProfileImage}
-                    alt={post.authorName}
-                    className="author-photo"
-                    onError={(e) => {
-                      e.target.src = defaultProfileImage;
-                    }}
-                    onClick={() => handleProfileClick(post.authorId)}
-                  />
-                  <div className="dropdown">
-                    <button className="dropbtn"></button>
-                    <div className="dropdown-content">
-                      <button onClick={() => handleProfileClick(post.authorId)}>Profile</button>
-                      <button onClick={() => handleChatClick(post.authorId)}>Chat</button>
-                    </div>
-                  </div>
-                </div>
-                <div className="author-details">
-                  <span className="author-name">{post.authorName}</span>
-                  <span className="author-role">{post.authorRole}</span>
-                </div>
+              <img 
+                src={post.authorPhoto || defaultProfileImage} 
+                alt={post.authorName} 
+                className="profile-pic"
+                onClick={() => handleProfileClick(post.authorId)}
+              />
+              <div className="post-info">
+                <h3 onClick={() => handleProfileClick(post.authorId)}>{post.authorName}</h3>
+                <p className="post-date">{post.createdAt}</p>
               </div>
-              <span className="post-date">
-                {post.editedAt ? `Edited: ${post.editedAt}` : post.createdAt}
-              </span>
-            </div>
-
-            {post.replies && post.replies.length > 0 && (
-              <div className="replies-container">
-                {post.replies.map((reply, index) => (
-                  <div key={index} className="reply">
-                    <strong>{reply}</strong>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {editingPost === post.id ? (
-              <div className="edit-post-form">
-                <textarea
-                  value={editText}
-                  onChange={(e) => setEditText(e.target.value)}
-                  className="edit-textarea"
-                />
-                <div className="edit-actions">
-                  <button
-                    onClick={() => handleUpdate(post.id)}
-                    disabled={isLoading}
-                    className="save-btn"
-                  >
-                    Save
-                  </button>
-                  <button
-                    onClick={cancelEdit}
-                    className="cancel-btn"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div>
-                <p className="post-content">{post.text}</p>
-                {post.image && <img src={post.image} alt="Post" className="post-image" />}
-              </div>
-            )}
-
-            <div className="post-actions">
-              <div className="action-buttons">
-                <button
-                  className="action-button"
-                  disabled={!auth.currentUser}
-                >
-                </button>
-                <button
-                  className="action-button"
-                  onClick={() => handleReplyClick(post.authorName, post.id)}
-                >
-                  <i className="far fa-share-square"></i>
-                </button>
-              </div>
-
               {auth.currentUser?.uid === post.authorId && (
-                <div className="post-owner-actions">
-                  <button
-                    onClick={() => handleEdit(post)}
-                    className="edit-button"
-                    disabled={isLoading}
-                  >
-                    <i className="fas fa-edit"></i>
-                  </button>
-                  <button
-                    onClick={() => handleDelete(post.id)}
-                    className="delete-button"
-                    disabled={isLoading}
-                  >
-                    <i className="fas fa-trash"></i>
-                  </button>
+                <div className="post-actions">
+                  <button onClick={() => handleEdit(post)}>Edit</button>
+                  <button onClick={() => handleDelete(post.id)}>Delete</button>
                 </div>
               )}
             </div>
 
+            {editingPost === post.id ? (
+              <div className="edit-section">
+                <textarea
+                  value={editText}
+                  onChange={(e) => setEditText(e.target.value)}
+                />
+                <div className="edit-buttons">
+                  <button onClick={() => handleUpdate(post.id)}>Save</button>
+                  <button onClick={cancelEdit}>Cancel</button>
+                </div>
+              </div>
+            ) : (
+              <>
+                <p className="post-text">{post.text}</p>
+                {post.image && (
+                  <img src={post.image} alt="Post content" className="post-image" />
+                )}
+              </>
+            )}
+
+            <div className="replies-section">
+              {post.replies && post.replies.map((reply, index) => (
+                <div key={reply.id || index} className="reply">
+                  <img 
+                    src={reply.userPhoto || defaultProfileImage} 
+                    alt={reply.userName} 
+                    className="reply-profile-pic"
+                    onClick={() => handleProfileClick(reply.userId)}
+                  />
+                  <div className="reply-content">
+                    <span className="reply-author" onClick={() => handleProfileClick(reply.userId)}>
+                      {reply.userName}
+                    </span>
+                    <span className="reply-text">{reply.text}</span>
+                    <span className="reply-date">{reply.createdAt}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="post-footer">
+              <button onClick={() => handleReplyClick(post.authorName, post.id)}>Reply</button>
+              <button onClick={() => handleChatClick(post.authorId)}>Message</button>
+            </div>
+
             {replyPostId === post.id && (
-              <div className="reply-input">
-                <input 
-                  type="text" 
+              <div className="reply-input-section">
+                <textarea
                   value={replyText}
                   onChange={(e) => setReplyText(e.target.value)}
-                  placeholder="Type your reply..."
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      handleReplySubmit();
-                    }
-                  }}
+                  placeholder="Write your reply..."
                 />
+                <button onClick={handleReplySubmit}>Send Reply</button>
               </div>
             )}
           </motion.div>
