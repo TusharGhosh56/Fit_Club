@@ -95,6 +95,7 @@ function Chat() {
   return (
     <div className="chat-page">
       <div className="chat-header">
+        <button className="close-button" onClick={() => navigate('/blog')}>×</button>
         {chatUser && (
           <div className="chat-user-info">
             <img 
