@@ -1,10 +1,23 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { auth } from '../firebase/config';
-import { fetchPosts, createPost, deletePost, updatePost, saveReply } from '../services/blogService';
+import { auth, db } from '../firebase/config';
+import { createPost, deletePost, updatePost, saveReply } from '../services/blogService';
 import defaultProfileImage from "../assets/profile/default_profile_image.jpg";
 import '../css/Blog.css';
 import { motion } from "framer-motion";
+import { 
+  onSnapshot, 
+  query, 
+  collection, 
+  orderBy, 
+  doc, 
+  getDoc, 
+  getDocs, 
+  where, 
+  addDoc, 
+  updateDoc, 
+  deleteDoc 
+} from 'firebase/firestore';
 
 function Blog() {
   const [posts, setPosts] = useState([]);
@@ -20,23 +33,76 @@ function Blog() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    loadPosts();
-  }, []);
+    // Set up real-time listener for posts
+    const unsubscribe = onSnapshot(
+      query(collection(db, 'posts'), orderBy('createdAt', 'desc')),
+      async (snapshot) => {
+        try {
+          const fetchedPosts = await Promise.all(
+            snapshot.docs.map(async (docSnapshot) => {
+              const postData = docSnapshot.data();
+              
+              // Fetch author data
+              const authorRef = doc(db, 'users', postData.authorId);
+              const authorSnap = await getDoc(authorRef);
+              const authorData = authorSnap.exists() ? authorSnap.data() : {};
 
-  const loadPosts = async () => {
-    try {
-      const result = await fetchPosts();
-      if (result.success) {
-        setPosts(result.data);
-      } else {
-        setError(result.error);
+              // Set up real-time listener for replies
+              const repliesSnapshot = await getDocs(
+                query(
+                  collection(db, 'replies'),
+                  where('postId', '==', docSnapshot.id),
+                  orderBy('createdAt', 'desc')
+                )
+              );
+              
+              const replies = await Promise.all(
+                repliesSnapshot.docs.map(async (replyDoc) => {
+                  const replyData = replyDoc.data();
+                  const replyUserRef = doc(db, 'users', replyData.userId);
+                  const replyUserSnap = await getDoc(replyUserRef);
+                  const replyUserData = replyUserSnap.exists() ? replyUserSnap.data() : {};
+
+                  return {
+                    id: replyDoc.id,
+                    text: replyData.replyText,
+                    createdAt: replyData.createdAt?.toDate?.().toLocaleString() || new Date().toLocaleString(),
+                    userId: replyData.userId,
+                    userName: replyData.userName || 'Anonymous',
+                    userPhoto: replyUserData.photoURL || null
+                  };
+                })
+              );
+
+              return {
+                id: docSnapshot.id,
+                ...postData,
+                authorPhoto: authorData.photoURL || null,
+                authorRole: authorData.role || 'User',
+                createdAt: postData.createdAt?.toDate?.().toLocaleString() || new Date().toLocaleString(),
+                replies: replies
+              };
+            })
+          );
+
+          setPosts(fetchedPosts);
+          setIsLoading(false);
+        } catch (error) {
+          console.error('Error fetching posts:', error);
+          setError('Failed to load posts');
+          setIsLoading(false);
+        }
+      },
+      (error) => {
+        console.error('Posts subscription error:', error);
+        setError('Failed to load posts');
+        setIsLoading(false);
       }
-    } catch (error) {
-      setError('Failed to load posts');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    );
+
+    // Cleanup subscription on unmount
+    return () => unsubscribe();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -53,7 +119,6 @@ function Blog() {
       try {
         const result = await createPost(newPost.trim(), newImage);
         if (result.success) {
-          setPosts(prevPosts => [result.data, ...prevPosts]);
           setNewPost('');
           setNewImage(null);
         } else {
@@ -73,20 +138,15 @@ function Blog() {
 
   const handleDelete = async (postId) => {
     if (window.confirm('Are you sure you want to delete this post?')) {
-      setIsLoading(true);
       setError('');
 
       try {
         const result = await deletePost(postId);
-        if (result.success) {
-          setPosts(prevPosts => prevPosts.filter(post => post.id !== postId));
-        } else {
+        if (!result.success) {
           setError(result.error);
         }
       } catch (error) {
         setError('Failed to delete post');
-      } finally {
-        setIsLoading(false);
       }
     }
   };
@@ -97,17 +157,11 @@ function Blog() {
   };
 
   const handleUpdate = async (postId) => {
-    setIsLoading(true);
     setError('');
 
     try {
       const result = await updatePost(postId, editText.trim());
       if (result.success) {
-        setPosts(prevPosts => prevPosts.map(post =>
-          post.id === postId
-            ? { ...post, text: editText.trim(), editedAt: new Date().toLocaleString() }
-            : post
-        ));
         setEditingPost(null);
         setEditText('');
       } else {
@@ -115,8 +169,6 @@ function Blog() {
       }
     } catch (error) {
       setError('Failed to update post');
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -141,9 +193,7 @@ function Blog() {
   const handleReplySubmit = async () => {
     if (replyPostId && replyText.trim()) {
       const result = await saveReply(replyPostId, replyText.trim());
-      if (result.success) {
-        await loadPosts(); // Reload posts to get updated replies
-      } else {
+      if (!result.success) {
         setError(result.error || 'Failed to save reply');
       }
       setReplyText('');
