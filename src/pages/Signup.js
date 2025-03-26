@@ -12,6 +12,7 @@ function Signup() {
     password: '',
     confirmPassword: '',
     isTrainer: false,
+    specialization: '',
   });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -46,7 +47,13 @@ function Signup() {
     }
 
     try {
-      const result = await signupUser(formData.email, formData.password, formData.name, formData.isTrainer);
+      const result = await signupUser(
+        formData.email, 
+        formData.password, 
+        formData.name, 
+        formData.isTrainer,
+        formData.isTrainer ? formData.specialization : null
+      );
       if (result.success) {
         setSuccessMessage('Account created successfully! Redirecting to login...');
         setTimeout(() => {
@@ -127,6 +134,25 @@ function Signup() {
               />
             </label>
           </div>
+          {formData.isTrainer && (
+            <div className="form-group">
+              <label htmlFor="specialization">Specialization</label>
+              <select
+                id="specialization"
+                value={formData.specialization}
+                onChange={handleChange}
+                required={formData.isTrainer}
+              >
+                <option value="">Select Specialization</option>
+                <option value="yoga">Yoga</option>
+                <option value="weightTraining">Weight Training</option>
+                <option value="cardio">Cardio</option>
+                <option value="crossfit">CrossFit</option>
+                <option value="pilates">Pilates</option>
+                <option value="nutrition">Nutrition</option>
+              </select>
+            </div>
+          )}
           <button 
             type="submit" 
             className="auth-button"

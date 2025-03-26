@@ -33,7 +33,6 @@
   background: none;
   color: rgb(0, 0, 0);
   cursor: pointer;
-
 }
 
 .payment-header {
@@ -141,7 +140,6 @@
   transition: background 0.3s ease;
   background: #FF5722;
 }
-
 
 .payment-footer {
   padding: 1rem;
