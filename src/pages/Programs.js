@@ -61,7 +61,7 @@ function Equipment() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
       >
-        Our <span className="highlight">Key</span> Highlights
+        OUR <span className="highlight">KEY</span> HIGHLIGHTS
       </motion.h2>
       
       {sections.map((section, index) => {
