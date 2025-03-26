@@ -160,26 +160,27 @@ const Profile = () => {
           </div>
         </div>
 
-        <div className="stats-container">
-          {["clientsTrained", "successRate", "certifications"].map((field) => (
-            <div key={field} className="stat-box">
-              <div className="stat-number">
-                {isEditing ? (
-                  <input
-                    type="text"
-                    value={editedData?.stats?.[field] || "0"}
-                    onChange={(e) => handleStatsChange(field, e.target.value)}
-                    className="stat-input"
-                  />
-                ) : (
-                  userData?.stats?.[field] || "0"
-                )}
+        {userData?.role === 'Trainer' && (
+          <div className="stats-container">
+            {["clientsTrained", "successRate", "certifications"].map((field) => (
+              <div key={field} className="stat-box">
+                <div className="stat-number">
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={editedData?.stats?.[field] || "0"}
+                      onChange={(e) => handleStatsChange(field, e.target.value)}
+                      className="stat-input"
+                    />
+                  ) : (
+                    userData?.stats?.[field] || "0"
+                  )}
+                </div>
+                <div className="stat-label">{field.replace(/([A-Z])/g, " $1").trim()}</div>
               </div>
-              <div className="stat-label">{field.replace(/([A-Z])/g, " $1").trim()}</div>
-            </div>
-          ))}
-        </div>
-
+            ))}
+          </div>
+        )}
         <div className="profile-details">
           <div className="profile-info-grid">
             {["email", "phone", "experience"].map((field) => (

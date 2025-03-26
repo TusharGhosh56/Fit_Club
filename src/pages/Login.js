@@ -19,6 +19,9 @@ function Login() {
       const result = await loginUser(email, password);
       
       if (result.success) {
+        // Store user data in localStorage for persistence
+        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('userData', JSON.stringify(result.user.userData));
         navigate('/');
       } else {
         setError(result.error);
@@ -56,6 +59,7 @@ function Login() {
               onChange={(e) => setPassword(e.target.value)}
               required
               placeholder="Enter your password"
+              minLength="6"
             />
           </div>
           <button 
@@ -74,4 +78,4 @@ function Login() {
   );
 }
 
-export default Login; 
+export default Login;
