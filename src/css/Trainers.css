@@ -23,7 +23,7 @@
 }
 
 .trainer-card {
-  background: #fff;
+  background: linear-gradient(145deg, #1a1a1a, #242424);
   border-radius: 15px;
   overflow: hidden;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
@@ -35,19 +35,19 @@
 }
 
 .trainer-image-container {
-  width: 100%;
-  height: 300px;
+  width: 200px;
+  height: 200px;
+  margin: 0 auto;
   overflow: hidden;
-  position: relative;
-}
-.expert {
-  color:#FF5722;
+  border-radius: 50%;
 }
 
 .trainer-image {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-top: 2rem;
 }
 
 .trainer-info {
@@ -57,14 +57,15 @@
 
 .trainer-name {
   font-size: 1.5rem;
-  color: #333;
+  color: #ffffff;
   margin-bottom: 0.5rem;
 }
 
 .trainer-specialization {
-  color: #666;
-  font-size: 1.1rem;
+  color: #ff5722;
+  font-size: 1.5rem;
   text-transform: capitalize;
+  font-weight: bold;
 }
 
 .trainer-info-container{
@@ -89,12 +90,34 @@
 .stat-value {
   font-size: 1.2rem;
   font-weight: bold;
-  color: #333;
+  color: #ffffff;
 }
 
 .stat-label {
   font-size: 0.9rem;
-  color: #666;
+  color: #ffffff;
+}
+
+.expert {
+  color:#FF5722;
+}
+
+.connect-trainer-btn {
+  background-color: #ff6b6b;
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 25px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 1rem;
+  width: 100%;
+  transition: background-color 0.3s ease;
+  margin-bottom:2rem;
+}
+
+.connect-trainer-btn:hover {
+  background-color: #ff5252;
 }
 
 @media (max-width: 768px) {
@@ -104,5 +127,6 @@
   
   .trainer-image-container {
     height: 250px;
+    width: 250px;
   }
 }

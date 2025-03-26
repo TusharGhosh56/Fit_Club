@@ -4,11 +4,13 @@ import { db } from '../firebase/config';
 import '../css/Trainers.css';
 import defaultTrainerImage from '../assets/profile/default_profile_image.jpg';
 import { getProfilePicture } from '../services/profileService';
+import { useNavigate } from 'react-router-dom';
 
 function Trainers() {
   const [trainers, setTrainers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchTrainers = async () => {
@@ -111,6 +113,12 @@ function Trainers() {
                   </div>
                 </div>
               </div>
+              <button 
+                className="connect-trainer-btn"
+                onClick={() => navigate(`/chat/${trainer.id}`)}
+              >
+                Connect with Trainer
+              </button>
             </div>
           ))
         )}
