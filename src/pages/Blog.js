@@ -14,9 +14,6 @@ import {
   getDoc, 
   getDocs, 
   where, 
-  addDoc, 
-  updateDoc, 
-  deleteDoc 
 } from 'firebase/firestore';
 
 function Blog() {
