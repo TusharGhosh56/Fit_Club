@@ -57,8 +57,10 @@ function Navbar() {
       <ul className={`nav-links ${isSidebarOpen ? 'open' : ''}`} ref={sidebarRef}>
         <li><Link to="/" onClick={closeSidebar}>Home</Link></li>
         <li><Link to="/programs" onClick={closeSidebar}>Programs</Link></li>
+        <li><Link to="/trainers" onClick={closeSidebar}>Trainers</Link></li>
         <li><Link to="/about" onClick={closeSidebar}>About</Link></li>
         <li><Link to="/blog" onClick={closeSidebar}>Blog</Link></li>
+        
         {!isLoggedIn && (
           <li className="auth-links">
             <Link to="/login" className="login-btn" onClick={closeSidebar}>Login/Signup</Link>

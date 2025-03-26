@@ -11,6 +11,7 @@ import Signup from './pages/Signup';
 import Profile from './pages/Profile';
 import UserProfile from './pages/UserProfile';
 import Chat from './pages/Chat';
+import Trainers from './pages/Trainers';
 import { auth } from './firebase/config'; 
 import { onAuthStateChanged } from 'firebase/auth';
 import './App.css';
@@ -41,6 +42,7 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/profile/:userId" element={<UserProfile />} />
             <Route path="/chat/:userId" element={<Chat />} />
+            <Route path="/trainers" element={<Trainers />} />
           </Routes>
         </main>
         <Footer />
