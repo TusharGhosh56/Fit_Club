@@ -1,0 +1,132 @@
+.trainers-container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.trainers-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.trainers-header h1 {
+  font-size: 2.5rem;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.trainers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+  padding: 1rem;
+}
+
+.trainer-card {
+  background: linear-gradient(145deg, #1a1a1a, #242424);
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.trainer-card:hover {
+  transform: translateY(-5px);
+}
+
+.trainer-image-container {
+  width: 200px;
+  height: 200px;
+  margin: 0 auto;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+.trainer-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-top: 2rem;
+}
+
+.trainer-info {
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.trainer-name {
+  font-size: 1.5rem;
+  color: #ffffff;
+  margin-bottom: 0.5rem;
+}
+
+.trainer-specialization {
+  color: #ff5722;
+  font-size: 1.5rem;
+  text-transform: capitalize;
+  font-weight: bold;
+}
+
+.trainer-info-container{
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+}
+
+.trainer-stats {
+  display: block;
+  justify-content: space-around;
+  padding: 1rem;
+  border-top: 1px solid #eee;
+  margin-top: 0rem;
+}
+
+.stat {
+  text-align: center;
+}
+
+.stat-value {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  color: #ffffff;
+}
+
+.expert {
+  color:#FF5722;
+}
+
+.connect-trainer-btn {
+  background-color: #ff6b6b;
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 25px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 1rem;
+  width: 100%;
+  transition: background-color 0.3s ease;
+  margin-bottom:2rem;
+}
+
+.connect-trainer-btn:hover {
+  background-color: #ff5252;
+}
+
+@media (max-width: 768px) {
+  .trainers-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+  
+  .trainer-image-container {
+    height: 250px;
+    width: 250px;
+  }
+}
