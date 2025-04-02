@@ -1,19 +1,22 @@
 .auth-container {
-  min-height: 100vh;
+  min-height: calc(100vh - 80px); /* Subtract footer height */
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
+  padding: 1rem;
   background: linear-gradient(135deg, #1a1a1a 0%, #333 100%);
+  margin-bottom: 80px; /* Add margin for footer */
 }
 
 .auth-card {
   background: white;
-  padding: 2.5rem;
+  padding: 2rem;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  width: 100%;
+  width: 90%;
   max-width: 400px;
+  margin: 2rem auto;
 }
 
 .auth-card h2 {
@@ -30,34 +33,37 @@
 .form-group {
   margin-bottom: 1.5rem;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  width: 100%;
 }
 
 .form-group label {
-  margin-bottom: 0;
+  margin-bottom: 0.5rem;
   color: #333;
   font-weight: 500;
-  flex-grow: 1;
 }
 
-.form-group input {
+.form-group input,
+.form-group select {
   width: 100%;
   padding: 0.8rem;
-  margin-top: 0px;
   border: 2px solid #eee;
   border-radius: 4px;
   font-size: 1rem;
   transition: border-color 0.3s ease;
-}
-
-.form-group input:focus {
-  border-color: #ff4d4d;
-  outline: none;
+  box-sizing: border-box;
 }
 
 .form-group input[type="checkbox"] {
-  margin-left: 10px;
   width: auto;
+  margin-left: 0;
+  margin-top: 0.5rem;
+}
+
+.form-group:has(input[type="checkbox"]) {
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
 }
 
 .auth-button {
@@ -104,20 +110,41 @@
   color: #ff4d4d;
 }
 
-
 .auth-links {
   display: flex;
   gap: 1rem;
 }
 
-
-
-@media (max-width: 480px) {
-  .auth-card {
-    padding: 1.5rem;
+@media (max-width: 768px) {
+  .auth-container {
+    min-height: calc(100vh - 120px); /* Adjust for taller footer on mobile */
+    margin-bottom: 120px;
   }
 }
 
+@media (max-width: 480px) {
+  .auth-container {
+    padding: 0.5rem;
+  }
+
+  .auth-card {
+    width: 95%;
+    padding: 1.5rem;
+    margin: 1rem auto;
+  }
+}
+
+@media (max-width: 350px) {
+  .auth-container {
+    min-height: calc(100vh - 150px); /* Further adjust for even taller footer */
+    margin-bottom: 150px;
+  }
+
+  .auth-card {
+    width: 98%;
+    padding: 1rem;
+  }
+}
 
 .error {
   border-color: #ff4d4d !important;
@@ -166,20 +193,11 @@
   color: #666;
   margin: 1.5rem 0;
   font-size: 1.1rem;
-} 
-
-#confirmPassword{
-  width: 90%;
 }
 
-#password{
-  width: 67%;
-}
-
-#email{
-  width: 67%;
-}
-
-#name{
-  width: 67%;
+#confirmPassword,
+#password,
+#email,
+#name {
+  width: 100%;
 }
