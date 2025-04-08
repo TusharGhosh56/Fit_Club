@@ -8,6 +8,7 @@ import hero4 from "../assets/home/hero/hero4.mp4";
 import hero5 from "../assets/home/hero/hero5.mp4";
 import { useEffect, useState, useMemo } from 'react';
 import PaymentPage from '../components/PaymentPage';
+import { auth } from '../firebase/config';
 
 function Home() {
   const navigate = useNavigate();
@@ -49,6 +50,14 @@ function Home() {
     };
   }, [currentVideoIndex, videos]);
 
+  const handleStartTrialClick = () => {
+    if (auth.currentUser) {
+      navigate('/programs');
+    } else {
+      navigate('/login');
+    }
+  };
+
   return (
     <motion.div className="home" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
       <div className="video-container">
@@ -68,9 +77,9 @@ function Home() {
           className="cta-button"
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
-          onClick={() => navigate('/login')}
+          onClick={handleStartTrialClick}
         >
-          Start Free Trial
+          {auth.currentUser ? "View Programs" : "Start Free Trial"}
         </motion.button>
       </motion.div>
 
